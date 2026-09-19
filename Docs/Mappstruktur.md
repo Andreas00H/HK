@@ -2,7 +2,7 @@
 
 Detta dokument beskriver hur projektet är uppdelat. Filerna som skapats nu är **tomma skal** med svenska kommentarer. Ingen frontend-, backend- eller affärslogik är införd ännu.
 
-Roten är git-repot `HK` (GitHub: BorrowNotBuy).
+Roten är git-repot `HK` (GitHub: [Andreas00H/HK](https://github.com/Andreas00H/HK)).
 
 ```
 HK/
