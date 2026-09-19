@@ -1,0 +1,17 @@
+# Beroenden (läggs till vid utvecklingsstart)
+node_modules/
+
+# Miljövariabler
+.env
+.env.*
+
+# Bygg och loggar
+dist/
+build/
+*.log
+
+# Editor och OS
+.DS_Store
+Thumbs.db
+
+# Viktiga filer
