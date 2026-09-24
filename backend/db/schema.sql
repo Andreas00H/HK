@@ -1,0 +1,7 @@
+-- Skal för databasens fem tabeller. Ingen SQL-logik ännu.
+-- users: id, name, email, phone, password_hash, location (stad), created_at
+-- categories: id, name
+-- items: id, owner_id, category_id, name, lending_price, description, condition, location, image_url, available, created_at
+-- borrow_requests: id, item_id, borrower_id, start_date, end_date, status, created_at
+-- reviews: id, borrowing_id, reviewer_id, reviewed_user_id, rating, comment, created_at
+-- Status för borrow_requests: REQUESTED, ACCEPTED, DECLINED, BORROWED, RETURNED, COMPLETED

@@ -1,0 +1,18 @@
+# Beroenden (läggs till vid utvecklingsstart)
+node_modules/
+
+# Miljövariabler (mallen backend/.env.example ska committas)
+.env
+!.env.example
+backend/.env
+
+# Bygg och loggar
+dist/
+build/
+*.log
+
+# Editor och OS
+.DS_Store
+Thumbs.db
+
+# Viktiga filer
