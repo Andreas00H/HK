@@ -8,21 +8,21 @@ Checklista för backend. **Schema, API-kontrakt, scope och stack:** se [Projektp
 
 ### Setup
 - [ ] `backend/package.json` — Express, pg, bcrypt, jsonwebtoken, dotenv, cors, nodemon  (klar )
-- [ ] `app.js` / `server.js` — JSON, CORS, rutter, fel-middleware
-- [ ] `.env` + `.env.example` — `PORT`, DB, `JWT_SECRET`, JWT TTL (`.env` i gitignore)
-- [ ] `GET /api/health` → `{ "status": "ok" }`
+- [ ] `app.js` / `server.js` — JSON, CORS, rutter, fel-middleware (klar)
+- [ ] `.env` + `.env.example` — `PORT`, DB, `JWT_SECRET`, JWT TTL (`.env` i gitignore) (klar)
+- [ ] `GET /api/health` → `{ "status": "ok" }` (klar)
 
 ### Databas
-- [ ] Lokal PostgreSQL + `backend/db/` (anslutning, `schema.sql`, `seed.sql`)
-- [ ] Fem tabeller enligt projektplan (inga extra tabeller; kontakter härleds från förfrågningar)
-- [ ] Seed: kategorier Verktyg, Elektronik, Utomhus, Kök, Trädgård, Hobby, Hem, Möbler
-- [ ] Rimliga index (email, owner_id, category_id, location, borrow_requests, reviews)
+- [ ] Lokal PostgreSQL + `backend/db/` (anslutning, `schema.sql`, `seed.sql`) (klar)
+- [ ] Fem tabeller enligt projektplan (inga extra tabeller; kontakter härleds från förfrågningar) (klar)
+- [ ] Seed: kategorier Verktyg, Elektronik, Utomhus, Kök, Trädgård, Hobby, Hem, Möbler (Klar)
+- [ ] Rimliga index (email, owner_id, category_id, location, borrow_requests, reviews) (klar)
 
 ### Auth & användare
-- [ ] `POST /api/auth/register` — name, email, phone, password, location; bcrypt; unik email
-- [ ] `POST /api/auth/login` — JWT; aldrig returnera `password_hash`
-- [ ] `middleware/authMiddleware.js` — Bearer JWT → `req.user.id`
-- [ ] `GET /api/users/:id` — publik profil (senare + omdömen/snittbetyg)
+- [ ] `POST /api/auth/register` — name, email, phone, password, location; bcrypt; unik email (klar)
+- [ ] `POST /api/auth/login` — JWT; aldrig returnera `password_hash` (klar)
+- [ ] `middleware/authMiddleware.js` — Bearer JWT → `req.user.id` (klar)
+- [ ] `GET /api/users/:id` — publik profil (senare + omdömen/snittbetyg) (klar)
 
 ### Kategorier & items
 - [ ] `GET /api/categories`
@@ -37,7 +37,7 @@ Checklista för backend. **Schema, API-kontrakt, scope och stack:** se [Projektp
 
 ---
 
-## Vecka 2 — Förfrågningar, kontakter, dashboard, omdömen
+## Vecka 2 — Förfrågningar, kontakter, dashboard, omdömen 
 
 ### Låneförfrågningar
 - [ ] `POST /api/borrow-requests` — item_id, start_date, end_date; status `REQUESTED`; lånare ≠ ägare; item tillgängligt
