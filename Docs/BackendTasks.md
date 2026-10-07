@@ -8,36 +8,36 @@ Checklista för backend. **Schema, API-kontrakt, scope och stack:** se [Projektp
 
 ### Setup
 - [ ] `backend/package.json` — Express, pg, bcrypt, jsonwebtoken, dotenv, cors, nodemon  (klar )
-- [ ] `app.js` / `server.js` — JSON, CORS, rutter, fel-middleware
-- [ ] `.env` + `.env.example` — `PORT`, DB, `JWT_SECRET`, JWT TTL (`.env` i gitignore)
-- [ ] `GET /api/health` → `{ "status": "ok" }`
+- [ ] `app.js` / `server.js` — JSON, CORS, rutter, fel-middleware (klar)
+- [ ] `.env` + `.env.example` — `PORT`, DB, `JWT_SECRET`, JWT TTL (`.env` i gitignore) (klar)
+- [ ] `GET /api/health` → `{ "status": "ok" }` (klar)
 
 ### Databas
-- [ ] Lokal PostgreSQL + `backend/db/` (anslutning, `schema.sql`, `seed.sql`)
-- [ ] Fem tabeller enligt projektplan (inga extra tabeller; kontakter härleds från förfrågningar)
-- [ ] Seed: kategorier Verktyg, Elektronik, Utomhus, Kök, Trädgård, Hobby, Hem, Möbler
-- [ ] Rimliga index (email, owner_id, category_id, location, borrow_requests, reviews)
+- [ ] Lokal PostgreSQL + `backend/db/` (anslutning, `schema.sql`, `seed.sql`) (klar)
+- [ ] Fem tabeller enligt projektplan (inga extra tabeller; kontakter härleds från förfrågningar) (klar)
+- [ ] Seed: kategorier Verktyg, Elektronik, Utomhus, Kök, Trädgård, Hobby, Hem, Möbler (Klar)
+- [ ] Rimliga index (email, owner_id, category_id, location, borrow_requests, reviews) (klar)
 
 ### Auth & användare
-- [ ] `POST /api/auth/register` — name, email, phone, password, location; bcrypt; unik email
-- [ ] `POST /api/auth/login` — JWT; aldrig returnera `password_hash`
-- [ ] `middleware/authMiddleware.js` — Bearer JWT → `req.user.id`
-- [ ] `GET /api/users/:id` — publik profil (senare + omdömen/snittbetyg)
+- [ ] `POST /api/auth/register` — name, email, phone, password, location; bcrypt; unik email (klar)
+- [ ] `POST /api/auth/login` — JWT; aldrig returnera `password_hash` (klar)
+- [ ] `middleware/authMiddleware.js` — Bearer JWT → `req.user.id` (klar)
+- [ ] `GET /api/users/:id` — publik profil (senare + omdömen/snittbetyg) (klar)
 
 ### Kategorier & items
-- [ ] `GET /api/categories`
+- [ ] `GET /api/categories` (Klar)
 - [ ] Items CRUD: `GET/POST /api/items`, `GET/PUT/DELETE /api/items/:id`
-- [ ] `GET /api/items` — query: `search`, `category_id`, `location`
-- [ ] POST/PUT/DELETE: JWT; `owner_id` från JWT; endast ägare får ändra/radera
-- [ ] Parameteriserade SQL-frågor
+- [ ] `GET /api/items` — query: `search`, `category_id`, `location` (klar)
+- [ ] POST/PUT/DELETE: JWT; `owner_id` från JWT; endast ägare får ändra/radera (klar)
+- [ ] Parameteriserade SQL-frågor (klr)
 
 ### Vecka 1 — test (Postman)
-- [ ] Auth (register, dubblett, login, fel lösenord, JWT saknas/ogiltig)
-- [ ] Kategorier, item CRUD, sök/filter, ägare vs icke-ägare
+- [ ] Auth (register, dubblett, login, fel lösenord, JWT saknas/ogiltig) (klar)
+- [ ] Kategorier, item CRUD, sök/filter, ägare vs icke-ägare (klar)
 
 ---
 
-## Vecka 2 — Förfrågningar, kontakter, dashboard, omdömen
+## Vecka 2 — Förfrågningar, kontakter, dashboard, omdömen 
 
 ### Låneförfrågningar
 - [ ] `POST /api/borrow-requests` — item_id, start_date, end_date; status `REQUESTED`; lånare ≠ ägare; item tillgängligt
