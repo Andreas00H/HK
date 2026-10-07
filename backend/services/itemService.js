@@ -20,42 +20,90 @@ function requireText(value, fieldName, maxLength) {
   return clean;
 }
 
+// Validerar annonsfält. requireAll = true vid skapande, false vid ändring
+// (då kontrolleras bara de fält som skickats med).
+function validateItemFields(body, requireAll) {
+  const clean = {};
+
+  const textFields = [
+    ["name", 150],
+    ["description", 2000],
+    ["condition", 50],
+    ["location", 100],
+    ["image_url", 2000],
+  ];
+  for (const [key, maxLength] of textFields) {
+    if (body[key] !== undefined || requireAll) {
+      clean[key] = requireText(body[key], key, maxLength);
+    }
+  }
+
+  if (body.category_id !== undefined || requireAll) {
+    const categoryId = Number(body.category_id);
+    if (!Number.isInteger(categoryId) || categoryId <= 0) {
+      throw httpError(400, "Ogiltig kategori");
+    }
+    clean.category_id = categoryId;
+  }
+
+  // Priset måste vara ett tal mellan 0 och 100000
+  if (body.lending_price !== undefined || requireAll) {
+    const price = Number(body.lending_price);
+    if (
+      body.lending_price === undefined ||
+      body.lending_price === null ||
+      body.lending_price === "" ||
+      !Number.isFinite(price) ||
+      price < 0 ||
+      price > 100000
+    ) {
+      throw httpError(400, "Ogiltigt pris per dag");
+    }
+    clean.lending_price = price;
+  }
+
+  // available får bara ändras vid redigering och måste vara true eller false
+  if (body.available !== undefined) {
+    if (typeof body.available !== "boolean") {
+      throw httpError(400, "Fältet \"available\" måste vara true eller false");
+    }
+    clean.available = body.available;
+  }
+
+  return clean;
+}
+
+// Hämtar annonsen och kontrollerar att den inloggade användaren är ägaren
+async function getOwnedItem(userId, id) {
+  const itemId = Number(id);
+  if (!Number.isInteger(itemId) || itemId <= 0) {
+    throw httpError(400, "Ogiltigt annons-id");
+  }
+
+  const item = await itemModel.findById(itemId);
+  if (!item) {
+    throw httpError(404, "Annonsen finns inte");
+  }
+  if (item.owner_id !== userId) {
+    throw httpError(403, "Du får bara ändra dina egna annonser");
+  }
+  return item;
+}
+
 // Skapar en annons. userId kommer från JWT, aldrig från klienten.
 async function createItem(userId, body) {
-  const name = requireText(body.name, "name", 150);
-  const description = requireText(body.description, "description", 2000);
-  const condition = requireText(body.condition, "condition", 50);
-  const location = requireText(body.location, "location", 100);
-  const imageUrl = requireText(body.image_url, "image_url", 2000);
-
-  const categoryId = Number(body.category_id);
-  if (!Number.isInteger(categoryId) || categoryId <= 0) {
-    throw httpError(400, "Ogiltig kategori");
-  }
-
-  // Priset måste finnas och vara ett tal mellan 0 och 100000
-  const lendingPrice = Number(body.lending_price);
-  if (
-    body.lending_price === undefined ||
-    body.lending_price === null ||
-    body.lending_price === "" ||
-    !Number.isFinite(lendingPrice) ||
-    lendingPrice < 0 ||
-    lendingPrice > 100000
-  ) {
-    throw httpError(400, "Ogiltigt pris per dag");
-  }
+  const fields = validateItemFields(body, true);
 
   try {
     return await itemModel.createItem({
       ownerId: userId,
-      categoryId,
-      name,
-      lendingPrice,
-      description,
-      condition,
-      location,
-      imageUrl,
+      categoryId: fields.category_id,
+      name: fields.name,
+      lendingPrice: fields.lending_price,
+      description: fields.description,
+      condition: fields.condition,
+      location: fields.location,
+      imageUrl: fields.image_url,
     });
   } catch (err) {
     // 23503 = främmande nyckel finns inte (kategorin existerar inte)
@@ -65,7 +113,6 @@ async function createItem(userId, body) {
     throw err;
   }
 }
-
 
 // Hämtar annonslistan med filter från query-strängen
 async function getItems(query) {
@@ -110,4 +157,29 @@ async function getItem(id) {
   return item;
 }
 
-module.exports = { createItem, getItems, getItem };
+// Uppdaterar en annons (endast ägaren)
+async function updateItem(userId, id, body) {
+  const item = await getOwnedItem(userId, id);
+  const fields = validateItemFields(body, false);
+
+  if (Object.keys(fields).length === 0) {
+    throw httpError(400, "Inga fält att uppdatera");
+  }
+
+  try {
+    return await itemModel.updateItem(item.id, fields);
+  } catch (err) {
+    if (err.code === "23503") {
+      throw httpError(400, "Kategorin finns inte");
+    }
+    throw err;
+  }
+}
+
+// Raderar en annons (endast ägaren)
+async function deleteItem(userId, id) {
+  const item = await getOwnedItem(userId, id);
+  await itemModel.deleteItem(item.id);
+}
+
+module.exports = { createItem, getItems, getItem, updateItem, deleteItem };

@@ -58,4 +58,28 @@ async function findById(id) {
   return result.rows[0] || null;
 }
 
-module.exports = { createItem, findAll, findById };
+// Uppdaterar valda kolumner på en annons och returnerar den
+async function updateItem(id, fields) {
+  // Endast dessa kolumner får ändras (vitlista, så ingen kan skicka in egna kolumnnamn)
+  const allowed = [
+    "category_id", "name", "lending_price", "description",
+    "condition", "location", "image_url", "available",
+  ];
+  const keys = Object.keys(fields).filter((key) => allowed.includes(key));
+  const setParts = keys.map((key, i) => `${key} = $${i + 1}`);
+  const values = keys.map((key) => fields[key]);
+  values.push(id);
+
+  const result = await pool.query(
+    `UPDATE items SET ${setParts.join(", ")} WHERE id = $${values.length} RETURNING *`,
+    values
+  );
+  return result.rows[0] || null;
+}
+
+// Raderar en annons
+async function deleteItem(id) {
+  await pool.query("DELETE FROM items WHERE id = $1", [id]);
+}
+
+module.exports = { createItem, findAll, findById, updateItem, deleteItem };

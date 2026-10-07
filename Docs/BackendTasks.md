@@ -25,15 +25,15 @@ Checklista för backend. **Schema, API-kontrakt, scope och stack:** se [Projektp
 - [ ] `GET /api/users/:id` — publik profil (senare + omdömen/snittbetyg) (klar)
 
 ### Kategorier & items
-- [ ] `GET /api/categories`
+- [ ] `GET /api/categories` (Klar)
 - [ ] Items CRUD: `GET/POST /api/items`, `GET/PUT/DELETE /api/items/:id`
-- [ ] `GET /api/items` — query: `search`, `category_id`, `location`
-- [ ] POST/PUT/DELETE: JWT; `owner_id` från JWT; endast ägare får ändra/radera
-- [ ] Parameteriserade SQL-frågor
+- [ ] `GET /api/items` — query: `search`, `category_id`, `location` (klar)
+- [ ] POST/PUT/DELETE: JWT; `owner_id` från JWT; endast ägare får ändra/radera (klar)
+- [ ] Parameteriserade SQL-frågor (klr)
 
 ### Vecka 1 — test (Postman)
-- [ ] Auth (register, dubblett, login, fel lösenord, JWT saknas/ogiltig)
-- [ ] Kategorier, item CRUD, sök/filter, ägare vs icke-ägare
+- [ ] Auth (register, dubblett, login, fel lösenord, JWT saknas/ogiltig) (klar)
+- [ ] Kategorier, item CRUD, sök/filter, ägare vs icke-ägare (klar)
 
 ---
 
