@@ -82,4 +82,20 @@ async function deleteItem(id) {
   await pool.query("DELETE FROM items WHERE id = $1", [id]);
 }
 
-module.exports = { createItem, findAll, findById, updateItem, deleteItem };
+
+//Hämtar all annonser som en användar äger (även de som inte är tillgängliga)  
+
+async function findByOwner (ownerId) {
+  const result = await pool.query(
+    `SELECT items. *, categories.name AS category_name
+    FROM items
+    JOIN categories ON categories.id = items.category_id
+    WHERE items.owner_id = $1
+    ORDER BY items.created_at DESC`,
+    [ownerId]
+  );
+  return result.rows;
+}
+
+
+module.exports = { createItem, findAll, findById, updateItem, deleteItem, findByOwner};

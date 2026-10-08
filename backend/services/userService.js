@@ -1,5 +1,6 @@
 // Affärsregler för användare
 const userModel = require("../models/userModel");
+const reviewService = require("./reviewService");
 
 // Skapar ett fel med HTTP-statuskod som controllern kan skicka vidare
 function httpError(status, message) {
@@ -8,7 +9,7 @@ function httpError(status, message) {
   return err;
 }
 
-// Hämtar en publik profil via id
+// Hämtar en publik profil via id, med omdömen och snittbetyg
 async function getPublicProfile(id) {
   // id kommer som text från URL:en, så vi gör om och kontrollerar det
   const userId = Number(id);
@@ -20,7 +21,11 @@ async function getPublicProfile(id) {
   if (!user) {
     throw httpError(404, "Användaren finns inte");
   }
-  return user;
+
+  // Återanvänder logiken för omdömen så att snittet räknas på ett ställe
+  const { reviews, count, average_rating } = await reviewService.getUserReviews(userId);
+
+  return { ...user, review_count: count, average_rating, reviews };
 }
 
 module.exports = { getPublicProfile };
