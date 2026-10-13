@@ -1,10 +1,11 @@
 // Sidhuvud: logotyp till vänster och vald stad till höger. På dator visas menyn här i stället för i botten.
 import { Link, NavLink } from "react-router-dom";
 import { NAV_ITEMS } from "./navItems.js";
+import { useCity } from "../../hooks/useCity.js";
 
 export default function Header() {
-  // Staden blir dynamisk när CityContext är klar. Tills dess visas Stockholm (standard enligt UI.UX.md).
-  const city = "Stockholm";
+  // Vald stad kommer från CityContext (standard Stockholm)
+  const { city } = useCity();
 
   return (
     <header className="header">

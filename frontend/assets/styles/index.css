@@ -103,6 +103,16 @@ textarea {
   font-weight: 700;
 }
 
+/* Döljer text visuellt men låter skärmläsare läsa den */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 /* Knappar (UI.UX.md 4.4) */
 .btn {
   display: inline-flex;
