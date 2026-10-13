@@ -1,7 +1,9 @@
 # UI / UX – Hyra inte Köpa (HK)
 
 Ansvarig: Andy (UI/UX)
-Status: v1, första förslag. Kommentera i Discord eller i en issue om något ska ändras.
+Status: v1.1, uppdaterad 2026-10-13 efter mockups och beslut i gruppen. Kommentera i Discord eller i en issue om något ska ändras.
+
+**Mockups i Figma:** [HK – Mockups](https://www.figma.com/design/7Ks6k91BOnLcywdfrUiZPU/HK--Mockups) (Hem, Annonsdetaljer, Lägg upp, Kontakter, Profil)
 
 Bygger på Andys brainstorm "Hyr istället för köp" (se [Brainstorm.pdf](./Brainstorm.pdf)).
 
@@ -32,7 +34,7 @@ Fast längst ned på skärmen i mobil. Alltid 4 val, alltid i samma ordning:
 | 3 | **Kontakter** | `/contacts` | Ja |
 | 4 | **Profil** | `/profile` | Ja |
 
-- Varje val har en enkel ikon ovanför texten, eller bara text i v1 om vi inte hinner med ikoner.
+- Varje val har en enkel ikon ovanför texten (beslut 2026-10-13, ikonerna är inbyggda SVG:er utan extra paket).
 - **Aktivt val:** blå text och ikon (`--color-primary`) med fet text. Övriga är gråa (`--color-text-muted`).
 - **Badge:** en liten röd siffra på **Profil** när det finns nya förfrågningar eller statusbyten.
 - **Utloggad användare** som trycker på Lägg upp, Kontakter eller Profil skickas till `/login`. Efter inloggning kommer man tillbaka dit man ville.
@@ -95,28 +97,36 @@ Båda:   Kontakter (telefon + e-post syns efter Godkänd)
 +-----------------------------------+
 ```
 - Annonser visas som **kort i ett rutnät**: 2 per rad i mobil, 3 per rad på surfplatta och 4 per rad på dator. Samma upplägg som Blockets annonskort (se referensbild i brainstormen).
-- Kortet: bild överst (kvadratisk), under den rubrik, **dygnspris i fet stil** och stad i grå text.
+- Kortet: bild överst (kvadratisk), under den rubrik, **dygnspris i fet stil**, stad i grå text och etiketten **"Ledig"** (fältet `available`).
+- Ovanför korten: "Visar 7 annonser" till vänster och "Senaste" till höger (nyaste först).
 - Tom lista: "Inga annonser i Stockholm än. Bli först med att lägga upp något!"
 
 ### Annonsdetaljer `/items/:id`
-- Stor bild överst, sedan rubrik och **dygnspris stort och blått**.
-- Info-rader: kategori, skick, stad, tillgänglig ja/nej.
+- Överst: **← Tillbaka** till vänster och en **Dela**-knapp till höger (kopierar länken, eller öppnar telefonens dela-meny).
+- Stor bild. Flera bilder visas som "1/4 bilder" om vi hinner, annars en bild i v1.
+- Rubrik, "Ledig" och **dygnspris stort och blått**. Till höger om priset: **Handpenning** i grå text, bara om ägaren har fyllt i den.
+- Info-rader: Kategori, Skick, Stad. Om stadsdel finns visas den i parentes, t.ex. "Stockholm (Södermalm)".
 - Beskrivning.
-- Ägarruta: namn, snittbetyg (★ 4,5) och länk till omdömen.
-- **Primärknapp längst ned:** "Skicka låneförfrågan" (datumväljare start/slut). Visas inte för ägaren själv; ägaren ser "Redigera" i stället.
+- Ägarruta: initial, namn, snittbetyg (★ 4,8 (12 omdömen)) eller "Inga omdömen än", och "Medlem sedan 2021".
+- **Välj period:** Från och Till (svenskt datumformat), och under dem **"Beräknad hyra (2 dagar) 100 kr"** (dygnspris × antal dagar, räknas i frontend).
+- Primärknapp: "Skicka låneförfrågan". Utloggad ser "Logga in för att skicka förfrågan". Ägaren ser "Redigera annons" i stället.
+- Liten grå text under knappen: "Betalning och upphämtning sköter ni själva efter godkännande."
 
 ### Lägg upp / Redigera `/add-item`, `/items/:id/edit`
 - Ett formulär i en kolumn. Etikett ovanför varje fält.
-- Ordning: Rubrik → Bild-URL → Kategori → Skick → Pris per dag (kr) → Stad (förifylld) → Tillgänglig (kryssruta) → Beskrivning.
+- Överst: **Foton**, upp till 4 rutor där första bilden är "Huvudbild" och visas i listan. I v1 räcker en bild-URL om uppladdning inte hinns med.
+- Ordning: Rubrik → Kategori → Skick → Pris per dag (kr) och **Handpenning (frivilligt)** bredvid varandra → Stad (förifylld) och **Stadsdel (frivilligt)** bredvid varandra → Beskrivning → Tillgänglig för utlåning (reglage).
 - Knapp längst ned: **"Publicera"** (eller "Spara ändringar"). Vid redigering finns "Ta bort annons" som röd textlänk under knappen.
 
 ### Kontakter `/contacts`
 - Lista med kort: namn, vilken sak det gäller, telefon och e-post.
 - Telefon och e-post är klickbara (`tel:` / `mailto:`).
+- Två knappar längst ned i kortet: **Ring** (blå) och **Mejla** (vit med blå ram).
+- Statusbadge uppe till höger i kortet (Godkänd, Utlånad, Avslutad).
 - Liten grå text överst: "Kontaktuppgifter visas när en förfrågan är godkänd. Betalning och upphämtning sköter ni själva."
 
 ### Profil `/profile`
-- Knapp överst: **"Mina annonser & förfrågningar"** (till Översikt).
+- Knapp överst: **"Mina annonser & förfrågningar"** (till Översikt) med röd siffra när något nytt har hänt.
 - Namn, e-post, telefon och "Medlem sedan" (när kontot skapades).
 - Stad: rullista + "Spara".
 - Omdömen: snittbetyg och lista med omdömen.
@@ -179,20 +189,23 @@ Alla textfärger klarar WCAG AA-kontrast (minst 4,5:1) mot vit bakgrund.
 | **Sekundärknapp** | Vit bakgrund, blå ram och blå text |
 | **Farlig knapp/länk** | Röd text, ingen bakgrund |
 | **Fält** | Vit bakgrund, grå ram, 44 px höjd, blå ram vid fokus |
-| **Annonskort** | Vit, 1 px ram, kvadratisk bild överst, sedan rubrik (1 rad, klipps med …), dygnspris fet och stad i grå text. Hover/fokus: blå ram |
+| **Annonskort** | Vit, 1 px ram, kvadratisk bild överst, sedan rubrik (1 rad, klipps med …), dygnspris fet, stad i grå text och "Ledig". Hover/fokus: blå ram |
 | **Kategorichip** | Grå ram. Vald: ljusblå bakgrund och blå text |
-| **Statusbadge** | Liten rundad etikett, vit text på färg enligt tabellen nedan |
+| **Statusbadge** | Liten rundad etikett med ljus bakgrund och färgad text. Undantag: Utlånad är fylld blå med vit text, eftersom det är lånet som pågår |
 
 ### 4.5 Statusbadges
 
-| Status i databasen | Text i appen | Färg |
+| Status i databasen | Text i appen | Stil |
 | --- | --- | --- |
-| `REQUESTED` | Väntar | `--color-warning` |
-| `ACCEPTED` | Godkänd | `--color-primary` |
-| `DECLINED` | Nekad | `--color-danger` |
-| `BORROWED` | Utlånad | `--color-primary-dark` |
-| `RETURNED` | Återlämnad | `--color-text-muted` |
-| `COMPLETED` | Avslutad | `--color-success` |
+| `REQUESTED` | Väntar | Ljusgul bakgrund, text `--color-warning` |
+| `ACCEPTED` | Godkänd | Ljusblå bakgrund, text `--color-primary` |
+| `DECLINED` | Nekad | Ljusröd bakgrund, text `--color-danger` |
+| `BORROWED` | Utlånad | **Fylld** `--color-primary`, vit text |
+| `RETURNED` | Återlämnad | Grå bakgrund, text `--color-text-muted` |
+| `COMPLETED` | Avslutad | Ljusgrön bakgrund, text `--color-success` |
+| (annonskort) | Ledig | Ljusblå bakgrund, text `--color-primary` |
+
+Klasserna finns färdiga i `frontend/assets/styles/index.css` (`.badge .badge-requested` osv.).
 
 ---
 
@@ -205,11 +218,17 @@ Alla textfärger klarar WCAG AA-kontrast (minst 4,5:1) mot vit bakgrund.
 
 ---
 
-## 6. Öppna frågor till gruppen
+## 6. Beslut
 
-- [ ] Ikoner i bottenmenyn i v1, eller bara text?
-- [ ] Ska gäster se annonser på Hem utan att logga in? (Förslag: ja, men förfrågan kräver inloggning.)
-- [ ] Standardstad för gäster? (Förslag: Stockholm.)
+| Fråga | Beslut | Datum |
+| --- | --- | --- |
+| Menyvalets namn | **Lägg upp** (svenska i hela appen) | 2026-09-30 |
+| Ikoner i bottenmenyn | Ja, enkla SVG-ikoner ovanför texten | 2026-10-13 |
+| Får gäster se annonser? | Ja. Låneförfrågan, Lägg upp, Kontakter och Profil kräver inloggning | 2026-10-13 |
+| Standardstad för gäster | Stockholm | 2026-10-13 |
+| Handpenning och stadsdel | Ja, två **frivilliga** fält i `items`. Handpenningen betalas utanför appen, precis som hyran (godkänt av Ernest) | 2026-10-13 |
+| Statusbadges | Ljus bakgrund + färgad text, Utlånad fylld (från mockupsen) | 2026-10-13 |
+| Allt i designen måste finnas i databasen | AI-förslag som BankID, "svarar inom 1 timme" och favoriter togs bort ur mockupsen | 2026-09-30 |
 
 ## 7. Från brainstormen, men inte i v1
 
