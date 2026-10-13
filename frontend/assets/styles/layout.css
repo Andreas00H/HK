@@ -1,1 +1,129 @@
-/* Layout, header och bottenmeny. Ingen styling ännu. */
+/* Layout, sidhuvud och bottenmeny (UI.UX.md avsnitt 2). Mobil först, dator från 768px. */
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-main {
+  flex: 1;
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  /* Plats så att innehållet inte hamnar bakom den fasta bottenmenyn */
+  padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom));
+}
+
+/* Sidhuvud */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  height: var(--header-height);
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+.header-logo {
+  font-size: var(--text-lg);
+  font-weight: 800;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.header-logo-sub {
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+.header-city {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.header-nav {
+  display: none;
+}
+
+/* Bottenmeny */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  height: calc(var(--nav-height) + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+}
+
+.bottom-nav-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: var(--tap);
+  font-size: 12px;
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.bottom-nav-link.active {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+/* Dator: menyn flyttar upp i sidhuvudet och bottenmenyn döljs */
+@media (min-width: 768px) {
+  .header-nav {
+    display: flex;
+    gap: var(--space-1);
+    margin-left: auto;
+  }
+
+  .header-nav-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap);
+    padding: 0 var(--space-3);
+    border-radius: var(--radius);
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+
+  .header-nav-link.active {
+    color: var(--color-primary);
+    font-weight: 700;
+  }
+
+  .bottom-nav {
+    display: none;
+  }
+
+  .app-main {
+    padding-bottom: var(--space-6);
+  }
+}
