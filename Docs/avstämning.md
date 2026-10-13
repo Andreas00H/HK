@@ -104,10 +104,74 @@ Fem tabeller (inga extra): `users`, `categories`, `items`, `borrow_requests`, `r
 Frontend    ------ Andy  + Alex ----
 
 
+# Avstämning: Frontend
 
+**Ansvariga:** Andy + Alex
+**Datum:** 2026-10-13
+**Status:** Inte påbörjad i kod. Skalfilerna från mappstrukturen finns, men ingen React-app är uppsatt ännu.
 
+---
 
+## 1. Läge
 
+- Backend vecka 1–2 är klar och mergad till `main` (PR #2 och #3), så frontend kan nu bygga mot riktiga endpoints.
+- Designunderlaget är klart: [UI.UX.md](./UI.UX.md) och mockups i Figma (se UI/UX nedan).
+- `frontend/` saknar `package.json` och Vite-setup.
 
+## 2. Plan (förslag, bestäms med Alex)
+
+1. Setup: Vite + React + React Router, `frontend/.env.example` med `VITE_API_URL`, färger och typsnitt från UI.UX.md som CSS-variabler i `index.css`.
+2. Layout: `Header`, `BottomNav`, `Layout`.
+3. Konto: Logga in, Registrera, `AuthContext`, `ProtectedRoute`.
+4. Hem (lista, sök, kategorifilter) och Annonsdetaljer med låneförfrågan.
+5. Lägg upp / redigera annons.
+6. Kontakter, Profil, Översikt (dashboard) och Förfrågan med statusknappar.
+7. Omdömen, laddning, tomma listor och felmeddelanden.
+8. Driftsättning på Render tillsammans med backend.
+
+Förslag på uppdelning: **Andy** steg 1, 2, 4 och 5. **Alex** steg 3, 6 och 7. Vi jobbar på egna branches med små PR:er mot `main` för att undvika krockar.
+
+## 3. Risker
+
+- Frontend är den del som ligger mest efter inför vecka 44.
+- Setup (steg 1) måste vara klar och mergad innan vi kan jobba parallellt.
+
+---
 
 UI/UX----- Andy  + Chippe -----
+
+
+# Avstämning: UI/UX
+
+### Andy
+
+**Datum:** 2026-10-13
+**Status:** Designunderlag v1 klart.
+
+#### Gjort
+
+- **`Docs/UI.UX.md`** (2026-09-30): bottennavigation (Hem, Lägg upp, Kontakter, Profil), kort beskrivning av alla skärmar, stilguide (färger som CSS-variabler, typsnitt, avstånd, knappar, kort, statusbadges) och tillgänglighetskrav. Textfärgerna är kontrollerade mot WCAG AA-kontrast.
+- **`Docs/Brainstorm.pdf`** (2026-09-30): den ursprungliga idébrainstormen som projektplanen bygger på.
+- **Mockups i Figma** (2026-09-30) för fem skärmar: Hem, Annonsdetaljer, Lägg upp, Kontakter och Profil. [HK – Mockups](https://www.figma.com/design/7Ks6k91BOnLcywdfrUiZPU/HK--Mockups)
+- Mergat backend-PR #2 och #3.
+
+#### Designbeslut
+
+- Blå grundfärg (`#1D4ED8`) för tillit, kompakt Blocket-liknande layout, annonskort två per rad och dygnspriset alltid synligt.
+- Allt som visas i mockupsen ska finnas i databasen eller gå att räkna ut. Därför togs AI-förslag som BankID, "svarar inom 1 timme" och favoriter bort.
+- "Beräknad hyra" (dygnspris × antal dagar) på annonssidan räknas i frontend och kräver inget av backend.
+- Etiketten "Ledig" på annonskorten visar fältet `available`.
+
+#### Öppet
+
+- **Handpenning och stadsdel** finns i mockupsen men inte i databasen. Beslut behövs: två frivilliga fält i `items`, eller tas bort ur designen för v1.
+- Uppdatera UI.UX.md efter mockupsen (badge-stil, "Ledig", beslut i stället för öppna frågor).
+- Små justeringar i Figma (typsnitt på Kontakter, svenskt datumformat på annonssidan).
+
+#### Nästa
+
+- Bygga frontend enligt designen tillsammans med Alex.
+
+### Chippe
+
+_(fyll i)_
