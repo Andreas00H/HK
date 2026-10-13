@@ -179,3 +179,206 @@
   color: var(--color-danger);
   border-color: var(--color-danger);
 }
+
+/* Annonsdetaljer (UI.UX.md: Annonsdetaljer) */
+.item-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.details-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.back-link,
+.icon-btn {
+  min-height: var(--tap);
+  padding: 0 var(--space-3);
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.back-link {
+  border: none;
+  background: none;
+  padding-left: 0;
+  color: var(--color-primary);
+}
+
+.icon-btn {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.details-image {
+  aspect-ratio: 1 / 1;
+  max-height: 420px;
+  width: 100%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.details-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.details-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.details-title-row .page-title {
+  margin: 0;
+}
+
+.details-price {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.section-title {
+  font-size: var(--text-md);
+  font-weight: 700;
+  margin: 0 0 var(--space-2);
+}
+
+.description {
+  margin: 0;
+  white-space: pre-line;
+}
+
+/* Infotabell: etikett till vänster, värde till höger */
+.info-rows {
+  margin: 0;
+  padding: 0;
+}
+
+.info-rows div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--color-bg);
+}
+
+.info-rows div:last-child {
+  border-bottom: none;
+}
+
+.info-rows dt {
+  color: var(--color-text-muted);
+}
+
+.info-rows dd {
+  margin: 0;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* Ägarruta */
+.owner-box {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.owner-box p {
+  margin: 0;
+}
+
+.owner-name {
+  font-weight: 700;
+}
+
+.avatar {
+  flex: none;
+  width: var(--tap);
+  height: var(--tap);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+/* Låneförfrågan */
+.borrow-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.borrow-form .section-title {
+  margin: 0;
+}
+
+.date-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.date-row label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.date-row input {
+  min-height: var(--tap);
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.date-row input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.rent-total {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding: var(--space-3);
+  background: var(--color-bg);
+  border-radius: var(--radius);
+}
+
+.form-error {
+  margin: 0;
+  color: var(--color-danger);
+}
+
+.borrow-sent p {
+  margin: 0;
+}
+
+.center {
+  text-align: center;
+  margin: 0;
+}
