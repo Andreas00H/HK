@@ -238,3 +238,116 @@ Idéer som finns med i brainstormen men som vi väntar med för att hålla proje
 - Underkategorier (t.ex. Möbler → Stolar); v1 har bara huvudkategorier
 - Pausa eller radera konto från profilen
 - Byta lösenord från profilen
+
+## 8. Chipego
+
+Ansvarig: Chipego (UI/UX för Profil och Kontakter) Status: v1, 2026-10-13. Bygger på avsnitt 3, stilguiden i avsnitt 4 och skisserna i Figma. Alla färger, typsnitt, hörn och avstånd följer avsnitt 4.
+
+## 8.0 Mitt bidrag
+Knappar och menyval i Figma: jag skapade och designade knapparna som används i appen, bland annat bottenmenyns val Hem, Lägg upp, Kontakter och Profil med ikoner, samt primär, sekundär och farlig knapp. De finns som komponenter i Figma så att alla skärmar använder samma knappar.
+Färger: jag justerade knapparna och komponenterna till gruppens färger (--color-primary med flera enligt avsnitt 4.1), så att de matchar mockupsen.
+Profil och Kontakter: skisser och specifikation, se 8.1 och 8.2.
+Prototyper: klickbara prototyper i Figma läggs till här i ett senare skede.
+## 8.1 Profil /profile
++-----------------------------------+
+| Profil                            |
++-----------------------------------+
+| [ Mina annonser & förfrågningar 2 >]  <- blå knapp, röd siffra
+|                                   |
+| +-------------------------------+ |
+| | Mina uppgifter                | |
+| | [A] Andreas H.                | |
+| |     Medlem sedan 2024         | |
+| | E-post        andreas@mail.se | |
+| | Telefon         070 111 22 33 | |
+| +-------------------------------+ |
+| +-------------------------------+ |
+| | Stad                          | |
+| | Visa annonser i               | |
+| | [ Stockholm        v ] [Spara]| |
+| +-------------------------------+ |
+| +-------------------------------+ |
+| | Omdömen                       | |
+| | ★ 4,6 (5 omdömen)             | |
+| | Sara L. ★★★★★ 3 okt           | |
+| | Smidig och trevlig ...        | |
+| | Visa alla omdömen             | |
+| +-------------------------------+ |
+|             Logga ut              |
++-----------------------------------+
+|  Hem   Lägg upp  Kontakter Profil |
++-----------------------------------+
+
+Ordning uppifrån och ned
+
+Mina annonser & förfrågningar: primärknapp i full bredd som leder till /dashboard. Röd siffra (--color-danger, vit text) visar antal nya förfrågningar eller statusbyten. Ingen siffra när det är noll.
+Mina uppgifter (kort): initial i en ljusblå ruta (--color-primary-light, blå bokstav), namn i fet text och "Medlem sedan ÅÅÅÅ" i grå text. Under det två rader med etikett till vänster (grå) och värde till höger: E-post och Telefon.
+Stad (kort): rubrik, hjälptexten "Visa annonser i", rullista med städer och en sekundärknapp Spara bredvid. Efter sparning visas en kort grå text "Sparat" under raden och Hem visar annonser i den nya staden.
+Omdömen (kort): stor stjärna, snittbetyg i fet text och antal i grå text. Därefter de två senaste omdömena, åtskilda med en tunn linje: namn (fet), stjärnor, datum (grå) och texten. Längst ned en blå textlänk "Visa alla omdömen".
+Logga ut: grå textlänk centrerad längst ned.
+
+Tillstånd
+
+Inga omdömen: "Inga omdömen än. De dyker upp efter ditt första avslutade lån."
+Laddar: grå platshållarrutor i korten i stället för text.
+Fel vid sparning av stad: röd text under raden, till exempel "Kunde inte spara staden. Försök igen."
+
+Data: GET /api/users/:id (namn, stad, omdömen, snittbetyg) och GET /api/reviews/user/:id. E-post och telefon kommer från den inloggade användaren, eftersom profiler i API:t aldrig innehåller kontaktuppgifter.
+
+Inte i v1 (se avsnitt 7): byta lösenord, pausa och radera konto. Kortet Mina uppgifter är byggt så att en knapp "Ändra uppgifter" kan läggas till längst ned senare.
+
+## 8.2 Kontakter /contacts
++-----------------------------------+
+| Kontakter                         |
++-----------------------------------+
+| Kontaktuppgifter visas när en     |
+| förfrågan är godkänd. Betalning   |
+| och upphämtning sköter ni själva. |
+| +-------------------------------+ |
+| | [S] Sara L.        (Godkänd)  | |
+| | Du lånar: Borrmaskin Bosch    | |
+| |           20–22 okt           | |
+| | 070 123 45 67                 | |
+| | sara.l@mail.se                | |
+| | [  Ring  ]  [  Mejla  ]       | |
+| +-------------------------------+ |
+| +-------------------------------+ |
+| | [J] Johan K.       (Utlånad)  | |
+| | Lånar av dig: Tält 4 pers     | |
+| | ...                           | |
+| +-------------------------------+ |
++-----------------------------------+
+|  Hem   Lägg upp  Kontakter Profil |
++-----------------------------------+
+
+Kortets innehåll
+
+Överst: initial i ljusblå ruta, motpartens namn i fet text och statusbadge till höger (Godkänd, Utlånad, Återlämnad eller Avslutad enligt 4.5).
+Rad om saken, beroende på roll (my_role):
+Jag lånar: "Du lånar: Borrmaskin Bosch"
+Jag äger: "Lånar av dig: Tält 4 pers"
+Därefter perioden i grå text, till exempel "20–22 okt".
+Telefon och e-post med liten ikon framför, i blå text och klickbara (tel: och mailto:).
+Två knappar i samma rad, lika breda: Ring (primär) och Mejla (sekundär). Om ett av fälten saknas döljs den knappen och den andra tar hela bredden.
+
+Sortering: pågående först (Godkänd, Utlånad), sedan Återlämnad och Avslutad. Nyast först inom varje grupp.
+
+Tillstånd
+
+Inga kontakter: "Här hamnar kontaktuppgifter när en förfrågan blir godkänd." och en sekundärknapp "Hitta något att låna" som leder till Hem.
+Laddar: två grå platshållarkort.
+Fel: "Kunde inte hämta kontakter. Försök igen." med en textlänk för att ladda om.
+
+Data: GET /api/contacts ger request_id, status, start_date, end_date, item_name, my_role, contact_name, contact_phone och contact_email. Bara förfrågningar med status ACCEPTED eller senare kommer med, så Väntar och Nekad visas aldrig här.
+
+## 8.3 Gemensamt för mina sidor
+Sidrubrik (20 px fet) i ett vitt fält överst med 1 px ram under. Ingen Tillbaka-länk, eftersom båda nås från bottenmenyn.
+Kort: vit bakgrund, 1 px ram, 6 px hörn, 12 px innerluft och 8 px mellan korten.
+Initialrutan: 40×40 px, ljusblå bakgrund och blå bokstav. Samma ruta används för ägaren i Annonsdetaljer.
+Ring, Mejla och Spara är minst 44 px höga.
+Status skrivs alltid ut i text i badgen, inte bara med färg.
+## 8.4 Öppna frågor
+Fråga	Förslag
+Var visas mina egna uppgifter om GET /api/users/:id inte ger e-post och telefon?	Spara dem från inloggningen i AuthContext, eller lägg till GET /api/users/me i backend
+Ska avslutade kontakter ligga kvar för alltid?	Visa dem i 30 dagar efter Avslutad, sedan döljs de
+Ska stad kunna sparas utan inloggning?	Nej, gäster ser alltid Stockholm (beslut 2026-10-13)
