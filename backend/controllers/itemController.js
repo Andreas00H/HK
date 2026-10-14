@@ -1,5 +1,6 @@
 // Tar emot HTTP-anrop för annonser och skickar vidare till itemService
 const itemService = require("../services/itemService");
+const { isNonEmptyString, isPositiveInt, isPositiveNumber, sendIfInvalid } = require("../middleware/validate");
 
 // POST /api/items
 async function createItem(req, res, next) {
@@ -12,6 +13,18 @@ async function createItem(req, res, next) {
     }
     next(err);
   }
+
+  const { name, category_id, lending_price, description, condition, location } = req.body;
+
+  // Validera indata innan vi rör databasen
+  const errors = [];
+  if (!isNonEmptyString(name, 150)) errors.push("name saknas eller är ogiltigt");
+  if (!isPositiveInt(category_id)) errors.push("category_id måste vara ett positivt heltal");
+  if (!isPositiveNumber(lending_price)) errors.push("lending_price måste vara ett tal som är 0 eller mer");
+  if (!isNonEmptyString(description, 2000)) errors.push("description saknas");
+  if (!isNonEmptyString(condition, 100)) errors.push("condition saknas");
+  if (!isNonEmptyString(location, 100)) errors.push("location saknas");
+  if (sendIfInvalid(res, errors)) return;
 }
 
 
@@ -54,6 +67,17 @@ async function updateItem(req, res, next) {
     }
     next(err);
   }
+
+  const errors = [];
+  const b = req.body;
+  if (b.name !== undefined && !isNonEmptyString(b.name, 150)) errors.push("name är ogiltigt");
+  if (b.category_id !== undefined && !isPositiveInt(b.category_id)) errors.push("category_id är ogiltigt");
+  if (b.lending_price !== undefined && !isPositiveNumber(b.lending_price)) errors.push("lending_price är ogiltigt");
+  if (b.description !== undefined && !isNonEmptyString(b.description, 2000)) errors.push("description är ogiltigt");
+  if (b.condition !== undefined && !isNonEmptyString(b.condition, 100)) errors.push("condition är ogiltigt");
+  if (b.location !== undefined && !isNonEmptyString(b.location, 100)) errors.push("location är ogiltigt");
+  if (sendIfInvalid(res, errors)) return;
+
 }
 
 // DELETE /api/items/:id
