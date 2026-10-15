@@ -22,7 +22,9 @@ export default function Home() {
       .catch(() => setCategories([]));
   }, []);
 
-  const { items, loading, error } = useItems({ search: search.trim(), categoryId, location: city });
+  // Bara mellanslag räknas som ingen sökning, både i anropet och i texten när listan är tom
+  const query = search.trim();
+  const { items, loading, error } = useItems({ search: query, categoryId, location: city });
 
   return (
     <section className="page home">
@@ -41,7 +43,7 @@ export default function Home() {
 
       {!loading && !error && items.length === 0 && (
         <div className="message">
-          {search || categoryId ? (
+          {query || categoryId ? (
             <p>Inga annonser matchar din sökning.</p>
           ) : (
             <p>
