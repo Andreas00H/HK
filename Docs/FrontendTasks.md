@@ -15,10 +15,10 @@ Checklista för frontend **utan UI-design** — layout, färger och visuellt uts
 - [ ] `services/api.js` — `fetch`, bas-URL, `Authorization: Bearer`, JSON-fel
 
 ### Auth
-- [ ] `AuthContext` + `useAuth` — login/logout, spara JWT (t.ex. localStorage), inloggad användare
-- [ ] `ProtectedRoute` — skydda `/add-item`, `/dashboard`, `/profile`, `/contacts`, redigera annons m.m.
-- [ ] `Login.jsx` / `Register.jsx` — formulär → `POST /api/auth/login`, `POST /api/auth/register` (name, email, phone, password, location)
-- [ ] Visa API-fel (t.ex. fel lösenord, e-post upptagen) utan att designa om UX
+- [x] `AuthContext` + `useAuth` — login/logout, spara JWT (t.ex. localStorage), inloggad användare
+- [x] `ProtectedRoute` — skydda `/add-item`, `/dashboard`, `/profile`, `/contacts`, redigera annons m.m.
+- [x] `Login.jsx` / `Register.jsx` — formulär → `POST /api/auth/login`, `POST /api/auth/register` (name, email, phone, password, location)
+- [x] Visa API-fel (t.ex. fel lösenord, e-post upptagen) utan att designa om UX
 
 ### Hem / annonser
 - [ ] `CityContext` / `useCity` — vald stad (från profil eller standard); skicka `location` till `GET /api/items`

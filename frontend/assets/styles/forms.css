@@ -1,1 +1,79 @@
-/* Formulär: login, register, annons, förfrågan. Ingen styling ännu. */
+/* Formulär: login, register, annons, förfrågan (UI.UX.md: Logga in / Registrera). */
+
+/* Fält med etikett ovanför och fel- eller hjälptext under (components/common/Input.jsx) */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.field label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.field input {
+  min-height: var(--tap);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.field input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.field input[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+
+.field-error,
+.field-hint {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.field-error {
+  color: var(--color-danger);
+}
+
+.field-hint {
+  color: var(--color-text-muted);
+}
+
+/* Logga in / Registrera: centrerat, max 400 px brett, logotyp ovanför */
+.auth-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.auth-logo {
+  align-self: center;
+  margin-top: var(--space-4);
+  font-size: var(--text-xl);
+  font-weight: 800;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.auth-page .page-title {
+  margin: 0;
+  text-align: center;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.auth-switch {
+  margin: 0;
+  text-align: center;
+}

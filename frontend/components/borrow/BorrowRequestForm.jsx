@@ -1,6 +1,6 @@
 // Formulär för att begära lån under ett datumintervall. Visar beräknad hyra (dygnspris × antal dagar).
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { createBorrowRequest } from "../../services/borrowRequestService.js";
 
 // Dagens datum som ÅÅÅÅ-MM-DD (lokal tid, så att det blir rätt dag i Sverige)
@@ -18,6 +18,7 @@ function countDays(start, end) {
 }
 
 export default function BorrowRequestForm({ item, token }) {
+  const location = useLocation();
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [status, setStatus] = useState("idle"); // idle | sending | sent
@@ -94,7 +95,8 @@ export default function BorrowRequestForm({ item, token }) {
           {status === "sending" ? "Skickar…" : "Skicka låneförfrågan"}
         </button>
       ) : (
-        <Link to="/login" className="btn btn-primary btn-block">
+        // Efter inloggning kommer man tillbaka till annonsen
+        <Link to="/login" state={{ from: location }} className="btn btn-primary btn-block">
           Logga in för att skicka förfrågan
         </Link>
       )}

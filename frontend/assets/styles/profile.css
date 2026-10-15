@@ -1,1 +1,14 @@
-/* Profil, omdömen och stadsval. Ingen styling ännu. */
+/* Profil, omdömen och stadsval (UI.UX.md: Profil). */
+
+/* Logga ut: grå textlänk centrerad längst ned */
+.logout-link {
+  display: block;
+  min-height: var(--tap);
+  margin: var(--space-4) auto 0;
+  padding: 0 var(--space-3);
+  border: none;
+  background: none;
+  color: var(--color-text-muted);
+  text-decoration: underline;
+  cursor: pointer;
+}

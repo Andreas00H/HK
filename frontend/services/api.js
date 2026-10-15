@@ -7,11 +7,17 @@ export async function apiFetch(path, { method = "GET", body, token } = {}) {
   const headers = { "Content-Type": "application/json" };
   if (token) headers.Authorization = `Bearer ${token}`;
 
-  const res = await fetch(`${API_URL}${path}`, {
-    method,
-    headers,
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  let res;
+  try {
+    res = await fetch(`${API_URL}${path}`, {
+      method,
+      headers,
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  } catch {
+    // Servern svarar inte alls (nere, fel VITE_API_URL eller CORS). Annars visas webbläsarens engelska "Failed to fetch".
+    throw new Error("Kunde inte nå servern. Försök igen om en stund.");
+  }
 
   const data = await res.json().catch(() => null);
 
