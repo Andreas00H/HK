@@ -1,6 +1,8 @@
 // Huvudkomponent med alla rutter. Varje sida ligger i pages/ och visas inuti Layout.
+// Sidor inuti ProtectedRoute kräver inloggning (Projektplan avsnitt 6, UI.UX.md 2.1).
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/layout/Layout.jsx";
+import ProtectedRoute from "./components/common/ProtectedRoute.jsx";
 import Home from "./pages/Home.jsx";
 import Items from "./pages/Items.jsx";
 import ItemDetails from "./pages/ItemDetails.jsx";
@@ -20,12 +22,14 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/items" element={<Items />} />
         <Route path="/items/:id" element={<ItemDetails />} />
-        <Route path="/items/:id/edit" element={<EditItem />} />
-        <Route path="/add-item" element={<AddItem />} />
-        <Route path="/contacts" element={<Contacts />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/borrow-requests/:id" element={<BorrowingDetails />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/items/:id/edit" element={<EditItem />} />
+          <Route path="/add-item" element={<AddItem />} />
+          <Route path="/contacts" element={<Contacts />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/borrow-requests/:id" element={<BorrowingDetails />} />
+        </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="*" element={<p className="page">Sidan finns inte.</p>} />

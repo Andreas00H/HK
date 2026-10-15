@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { getItem } from "../services/itemService.js";
 import { getUser } from "../services/userService.js";
 import { formatPrice } from "../components/items/formatPrice.js";
+import { useAuth } from "../hooks/useAuth.js";
 import BorrowRequestForm from "../components/borrow/BorrowRequestForm.jsx";
 import "../assets/styles/items.css";
 
@@ -15,10 +16,8 @@ export default function ItemDetails() {
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
 
-  // Inloggad användare kommer från AuthContext när Alex är klar med inloggningen (useAuth).
-  // Tills dess räknas alla som utloggade: knappen leder till Logga in och "Redigera" visas inte.
-  const token = null;
-  const user = null;
+  // Utloggad: knappen leder till Logga in. Ägaren ser "Redigera annons" i stället för förfrågan.
+  const { token, user } = useAuth();
 
   useEffect(() => {
     let cancelled = false;
