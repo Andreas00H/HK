@@ -28,9 +28,9 @@ Checklista för frontend **utan UI-design** — layout, färger och visuellt uts
 - [x] `ItemCard`, `ItemList`, `SearchBar`, `CategoryFilter` — **data och props**, minimal markup
 
 ### Vecka 1 — manuell test
-- [ ] Register → login → JWT → skyddad sida
-- [ ] Lista, sök och filter mot backend
-- [ ] Logga ut; skyddade sidor omdirigerar
+- [x] Register → login → JWT → skyddad sida
+- [x] Lista, sök och filter mot backend
+- [x] Logga ut; skyddade sidor omdirigerar
 
 ---
 
