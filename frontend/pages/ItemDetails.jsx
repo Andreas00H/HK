@@ -43,6 +43,13 @@ export default function ItemDetails() {
     };
   }, [id]);
 
+  // Tillbaka till förra sidan i appen. Har annonsen öppnats via en delad länk finns ingen, då går vi till Hem.
+  // React Router numrerar sidorna i webbläsarens historik (idx), där 0 är första sidan i appen.
+  function handleBack() {
+    if (window.history.state?.idx > 0) navigate(-1);
+    else navigate("/");
+  }
+
   // Dela-knappen: telefonens dela-meny om den finns, annars kopieras länken
   async function handleShare() {
     const url = window.location.href;
@@ -61,7 +68,7 @@ export default function ItemDetails() {
 
   const topBar = (
     <div className="details-topbar">
-      <button type="button" className="back-link" onClick={() => navigate(-1)}>
+      <button type="button" className="back-link" onClick={handleBack}>
         ← Tillbaka
       </button>
       {item && (

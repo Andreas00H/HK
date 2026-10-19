@@ -23,9 +23,9 @@ Checklista för frontend **utan UI-design** — layout, färger och visuellt uts
 ### Hem / annonser
 - [x] `CityContext` / `useCity` — vald stad (från profil eller standard); skicka `location` till `GET /api/items`
 - [x] `Home.jsx` (ev. `Items.jsx`) — hämta annonser, lista
-- [ ] Sök + kategorifilter — query `search`, `category_id`; `GET /api/categories`
-- [ ] `ItemDetails.jsx` — `GET /api/items/:id`; knapp för låneförfrågan (dold om ej inloggad / egen annons)
-- [ ] `ItemCard`, `ItemList`, `SearchBar`, `CategoryFilter` — **data och props**, minimal markup
+- [x] Sök + kategorifilter — query `search`, `category_id`; `GET /api/categories`
+- [x] `ItemDetails.jsx` — `GET /api/items/:id`; knapp för låneförfrågan (dold om ej inloggad / egen annons)
+- [x] `ItemCard`, `ItemList`, `SearchBar`, `CategoryFilter` — **data och props**, minimal markup
 
 ### Vecka 1 — manuell test
 - [ ] Register → login → JWT → skyddad sida
