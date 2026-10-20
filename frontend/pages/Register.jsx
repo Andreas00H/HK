@@ -114,7 +114,10 @@ export default function Register() {
       </form>
 
       <p className="auth-switch">
-        Har du redan ett konto? <Link to="/login" state={location.state}>Logga in</Link>
+        Har du redan ett konto?{" "}
+        <Link to="/login" replace state={location.state}>
+          Logga in
+        </Link>
       </p>
     </section>
   );

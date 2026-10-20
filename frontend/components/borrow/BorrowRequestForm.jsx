@@ -95,8 +95,9 @@ export default function BorrowRequestForm({ item, token }) {
           {status === "sending" ? "Skickar…" : "Skicka låneförfrågan"}
         </button>
       ) : (
-        // Efter inloggning kommer man tillbaka till annonsen
-        <Link to="/login" state={{ from: location }} className="btn btn-primary btn-block">
+        // Efter inloggning kommer man tillbaka till annonsen. replace: inloggningen ersätter annonsen i historiken,
+        // annars hamnar man på samma annons igen när man trycker Tillbaka efter inloggningen.
+        <Link to="/login" replace state={{ from: location }} className="btn btn-primary btn-block">
           Logga in för att skicka förfrågan
         </Link>
       )}

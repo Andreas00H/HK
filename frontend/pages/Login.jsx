@@ -77,9 +77,13 @@ export default function Login() {
         </button>
       </form>
 
-      {/* state skickas vidare så att man ändå hamnar rätt efter registrering */}
+      {/* state skickas vidare så att man ändå hamnar rätt efter registrering. replace så att Logga in och
+          Skapa konto inte blir kvar i historiken efter att man kommit in. */}
       <p className="auth-switch">
-        Inget konto? <Link to="/register" state={location.state}>Skapa konto</Link>
+        Inget konto?{" "}
+        <Link to="/register" replace state={location.state}>
+          Skapa konto
+        </Link>
       </p>
     </section>
   );
