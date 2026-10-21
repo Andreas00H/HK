@@ -12,7 +12,9 @@
   font-weight: 600;
 }
 
-.field input {
+.field input,
+.field select,
+.field textarea {
   min-height: var(--tap);
   padding: 0 var(--space-3);
   border: 1px solid var(--color-border);
@@ -21,13 +23,41 @@
   color: var(--color-text);
 }
 
-.field input:focus {
+.field textarea {
+  padding: var(--space-3);
+  resize: vertical;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
   outline: none;
   border-color: var(--color-primary);
 }
 
-.field input[aria-invalid="true"] {
+.field input[aria-invalid="true"],
+.field select[aria-invalid="true"],
+.field textarea[aria-invalid="true"] {
   border-color: var(--color-danger);
+}
+
+/* Kryssruta med texten bredvid, t.ex. Tillgänglig för utlåning */
+.field .checkbox-field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--tap);
+  font-size: var(--text-md);
+  cursor: pointer;
+}
+
+.field .checkbox-field input {
+  width: 20px;
+  min-height: 20px;
+  height: 20px;
+  margin: 0;
+  padding: 0;
+  accent-color: var(--color-primary);
 }
 
 .field-error,
@@ -67,10 +97,40 @@
   text-align: center;
 }
 
-.auth-form {
+.auth-form,
+.item-form {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+}
+
+/* Lägg upp / Redigera annons: en kolumn, lika bred som annonsdetaljer */
+.form-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.form-page .page-title {
+  margin: 0;
+}
+
+/* Förhandsvisning av bilden från bild-länken */
+.image-preview {
+  width: 160px;
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .auth-switch {

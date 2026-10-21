@@ -37,8 +37,8 @@ Checklista för frontend **utan UI-design** — layout, färger och visuellt uts
 ## Vecka 2 — CRUD, lån, dashboard, kontakter
 
 ### Annonser (ägare)
-- [ ] `AddItem.jsx` + `ItemForm` — POST med JWT (rubrik, kategori, pris/dag, beskrivning, skick, stad, bild-URL, tillgänglig)
-- [ ] `EditItem.jsx` — PUT/DELETE endast egen annons; hantera 403
+- [x] `AddItem.jsx` + `ItemForm` — POST med JWT (rubrik, kategori, pris/dag, beskrivning, skick, stad, bild-URL, tillgänglig)
+- [x] `EditItem.jsx` — PUT/DELETE endast egen annons; hantera 403
 
 ### Låneförfrågningar
 - [ ] `BorrowRequestForm` — datum → `POST /api/borrow-requests`
