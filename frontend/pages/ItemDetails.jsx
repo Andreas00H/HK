@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { getItem } from "../services/itemService.js";
 import { getUser } from "../services/userService.js";
 import { formatPrice } from "../components/items/formatPrice.js";
+import { formatRating } from "../components/reviews/formatRating.js";
 import { useAuth } from "../hooks/useAuth.js";
 import BorrowRequestForm from "../components/borrow/BorrowRequestForm.jsx";
 import "../assets/styles/items.css";
@@ -149,9 +150,7 @@ export default function ItemDetails() {
         <div>
           <p className="owner-name">{ownerName}</p>
           <p className="muted">
-            {owner?.review_count > 0
-              ? `★ ${Number(owner.average_rating).toLocaleString("sv-SE", { maximumFractionDigits: 1 })} (${owner.review_count} ${owner.review_count === 1 ? "omdöme" : "omdömen"})`
-              : "Inga omdömen än"}
+            {formatRating(owner)}
             {owner?.created_at && ` · Medlem sedan ${new Date(owner.created_at).getFullYear()}`}
           </p>
         </div>

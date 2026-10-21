@@ -1,21 +1,8 @@
-// Formulär för att begära lån under ett datumintervall. Visar beräknad hyra (dygnspris × antal dagar).
+// Formulär för att begära lån under ett datumintervall (POST /api/borrow-requests). Visar beräknad hyra (dygnspris × antal dagar).
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createBorrowRequest } from "../../services/borrowRequestService.js";
-
-// Dagens datum som ÅÅÅÅ-MM-DD (lokal tid, så att det blir rätt dag i Sverige)
-function todayString() {
-  const now = new Date();
-  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-  return now.toISOString().slice(0, 10);
-}
-
-// Antal dagar mellan två datum. Samma dag räknas som 1 dag.
-function countDays(start, end) {
-  if (!start || !end || end < start) return 0;
-  const diff = (new Date(end) - new Date(start)) / (1000 * 60 * 60 * 24);
-  return Math.max(1, Math.round(diff));
-}
+import { countDays, todayString } from "./dates.js";
 
 export default function BorrowRequestForm({ item, token }) {
   const location = useLocation();
@@ -23,6 +10,7 @@ export default function BorrowRequestForm({ item, token }) {
   const [endDate, setEndDate] = useState("");
   const [status, setStatus] = useState("idle"); // idle | sending | sent
   const [error, setError] = useState(null);
+  const [requestId, setRequestId] = useState(null); // den skickade förfrågan, för länken till den
 
   const today = todayString();
   const days = countDays(startDate, endDate);
@@ -41,7 +29,8 @@ export default function BorrowRequestForm({ item, token }) {
     }
     setStatus("sending");
     try {
-      await createBorrowRequest({ itemId: item.id, startDate, endDate }, token);
+      const created = await createBorrowRequest({ itemId: item.id, startDate, endDate }, token);
+      setRequestId(created.id);
       setStatus("sent");
     } catch (err) {
       setError(err.message);
@@ -53,8 +42,8 @@ export default function BorrowRequestForm({ item, token }) {
     return (
       <div className="card borrow-sent" role="status">
         <p>
-          <strong>Förfrågan skickad!</strong> Ägaren får nu godkänna eller neka. Du ser status under
-          Profil → Mina annonser &amp; förfrågningar.
+          <strong>Förfrågan skickad!</strong> Ägaren får nu godkänna eller neka.{" "}
+          <Link to={`/borrow-requests/${requestId}`}>Följ förfrågan</Link>
         </p>
       </div>
     );

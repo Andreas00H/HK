@@ -41,9 +41,9 @@ Checklista för frontend **utan UI-design** — layout, färger och visuellt uts
 - [x] `EditItem.jsx` — PUT/DELETE endast egen annons; hantera 403
 
 ### Låneförfrågningar
-- [ ] `BorrowRequestForm` — datum → `POST /api/borrow-requests`
-- [ ] `BorrowingDetails.jsx` — visa status; **ägare:** knappar för tillåtna status (`PUT /api/borrow-requests/:id`) enligt projektplan
-- [ ] `RequestStatus`, `RequestCard` — visa statustext och tillgängliga åtgärder (logik, inte design)
+- [x] `BorrowRequestForm` — datum → `POST /api/borrow-requests`
+- [x] `BorrowingDetails.jsx` — visa status; **ägare:** knappar för tillåtna status (`PUT /api/borrow-requests/:id`) enligt projektplan
+- [x] `RequestStatus`, `RequestCard` — visa statustext och tillgängliga åtgärder (logik, inte design)
 
 ### Översikt
 - [ ] `Dashboard.jsx` — `GET /api/borrow-requests/my` och/eller `GET /api/dashboard` — egna annonser, skickade/mottagna förfrågningar
