@@ -1,1 +1,179 @@
-/* Gemensamma grundstilar. Ingen styling ännu. */
+/* Gemensamma grundstilar. Alla färger och mått kommer från Docs/UI.UX.md avsnitt 4.
+   Skriv aldrig hårdkodade färger i andra CSS-filer – använd var(--...). */
+
+:root {
+  /* Färger */
+  --color-primary: #1d4ed8;
+  --color-primary-dark: #1e3a8a;
+  --color-primary-light: #dbeafe;
+  --color-bg: #f3f4f6;
+  --color-surface: #ffffff;
+  --color-text: #111827;
+  --color-text-muted: #4b5563;
+  --color-border: #d1d5db;
+  --color-success: #15803d;
+  --color-success-light: #dcfce7;
+  --color-warning: #b45309;
+  --color-warning-light: #fef3c7;
+  --color-danger: #b91c1c;
+  --color-danger-light: #fee2e2;
+
+  /* Typsnitt */
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --text-sm: 14px;
+  --text-md: 16px;
+  --text-lg: 20px;
+  --text-xl: 24px;
+
+  /* Avstånd i steg om 4 */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+
+  /* Övrigt */
+  --radius: 6px;
+  --tap: 44px; /* minsta klickyta */
+  --max-width: 960px;
+  --header-height: 56px;
+  --nav-height: 64px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+}
+
+body {
+  font-family: var(--font);
+  font-size: var(--text-md);
+  line-height: 1.5;
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0 0 var(--space-3);
+  line-height: 1.25;
+}
+
+a {
+  color: var(--color-primary);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Hjälpklasser */
+.muted {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.page {
+  padding: var(--space-4);
+}
+
+.page-title {
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+
+/* Döljer text visuellt men låter skärmläsare läsa den */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Knappar (UI.UX.md 4.4) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--tap);
+  padding: 0 var(--space-4);
+  border-radius: var(--radius);
+  border: 1px solid var(--color-primary);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+}
+
+.btn-secondary {
+  background: var(--color-surface);
+  color: var(--color-primary);
+}
+
+.btn-danger {
+  background: none;
+  border: none;
+  color: var(--color-danger);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+/* Kort */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+}
+
+/* Statusbadges (UI.UX.md 4.5). Ljus bakgrund + färgad text, utom Utlånad som är fylld. */
+.badge {
+  display: inline-block;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.badge-requested { background: var(--color-warning-light); color: var(--color-warning); }
+.badge-accepted { background: var(--color-primary-light); color: var(--color-primary); }
+.badge-declined { background: var(--color-danger-light); color: var(--color-danger); }
+.badge-borrowed { background: var(--color-primary); color: #fff; }
+.badge-returned { background: var(--color-bg); color: var(--color-text-muted); }
+.badge-completed { background: var(--color-success-light); color: var(--color-success); }
+.badge-available { background: var(--color-primary-light); color: var(--color-primary); }
