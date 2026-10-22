@@ -2,13 +2,13 @@
 const pool = require("../db/db");
 
 // Skapar en ny annons och returnerar den
-async function createItem({ ownerId, categoryId, name, lendingPrice, description, condition, location, imageUrl }) {
+async function createItem({ ownerId, categoryId, name, lendingPrice, deposit, description, condition, location, area, imageUrl }) {
   const result = await pool.query(
     `INSERT INTO items
-       (owner_id, category_id, name, lending_price, description, condition, location, image_url)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+       (owner_id, category_id, name, lending_price, deposit, description, condition, location, area, image_url)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
      RETURNING *`,
-    [ownerId, categoryId, name, lendingPrice, description, condition, location, imageUrl]
+    [ownerId, categoryId, name, lendingPrice, deposit, description, condition, location, area, imageUrl]
   );
   return result.rows[0];
 }
@@ -62,8 +62,8 @@ async function findById(id) {
 async function updateItem(id, fields) {
   // Endast dessa kolumner får ändras (vitlista, så ingen kan skicka in egna kolumnnamn)
   const allowed = [
-    "category_id", "name", "lending_price", "description",
-    "condition", "location", "image_url", "available",
+    "category_id", "name", "lending_price", "deposit", "description",
+    "condition", "location", "area", "image_url", "available",
   ];
   const keys = Object.keys(fields).filter((key) => allowed.includes(key));
   const setParts = keys.map((key, i) => `${key} = $${i + 1}`);

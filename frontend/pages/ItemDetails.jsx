@@ -120,7 +120,13 @@ export default function ItemDetails() {
             <span className="badge badge-returned">Inte tillgänglig</span>
           )}
         </div>
-        <p className="details-price">{formatPrice(item.lending_price)}</p>
+        <div className="details-price-row">
+          <p className="details-price">{formatPrice(item.lending_price)}</p>
+          {/* Handpenning visas bara om ägaren har fyllt i den (UI.UX.md, Annonsdetaljer) */}
+          {item.deposit > 0 && (
+            <p className="muted details-deposit">Handpenning: {Number(item.deposit).toLocaleString("sv-SE")} kr</p>
+          )}
+        </div>
       </div>
 
       <dl className="card info-rows">
@@ -134,7 +140,7 @@ export default function ItemDetails() {
         </div>
         <div>
           <dt>Stad</dt>
-          <dd>{item.location}</dd>
+          <dd>{item.area ? `${item.location} (${item.area})` : item.location}</dd>
         </div>
       </dl>
 

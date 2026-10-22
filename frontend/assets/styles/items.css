@@ -382,3 +382,16 @@
   text-align: center;
   margin: 0;
 }
+
+/* Dygnspris med handpenning till höger (UI.UX.md, Annonsdetaljer) */
+.details-price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.details-deposit {
+  margin: 0;
+}
