@@ -1,1 +1,87 @@
-/* Kontaktsidan. Ingen styling ännu. */
+/* Kontaktsidan (UI.UX.md 8.2). */
+
+.contacts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.contacts > .muted {
+  margin: 0;
+}
+
+.contact-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.contact-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.contact-card p {
+  margin: 0;
+}
+
+/* Initial, namn och statusbadge på samma rad */
+.contact-card-top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-1);
+}
+
+.contact-name {
+  flex: 1;
+  margin: 0;
+  font-size: var(--text-md);
+  font-weight: 700;
+}
+
+/* Telefon och e-post: blå och klickbara */
+.contact-line {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  align-self: flex-start;
+  min-height: 32px;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+/* Ring och Mejla lika breda. Finns bara en tar den hela bredden. */
+.contact-actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.contact-actions .btn {
+  flex: 1;
+}
+
+.contacts-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+/* Platshållarkort medan kontakterna laddas */
+.skeleton-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.skeleton-card .skeleton:first-child {
+  width: 50%;
+}

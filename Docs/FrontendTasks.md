@@ -46,12 +46,12 @@ Checklista för frontend **utan UI-design** — layout, färger och visuellt uts
 - [x] `RequestStatus`, `RequestCard` — visa statustext och tillgängliga åtgärder (logik, inte design)
 
 ### Översikt
-- [ ] `Dashboard.jsx` — `GET /api/borrow-requests/my` och/eller `GET /api/dashboard` — egna annonser, skickade/mottagna förfrågningar
-- [ ] `Contacts.jsx` — `GET /api/contacts` efter godkännande; visa namn, telefon, e-post (ingen chatt)
+- [x] `Dashboard.jsx` — `GET /api/borrow-requests/my` och/eller `GET /api/dashboard` — egna annonser, skickade/mottagna förfrågningar
+- [x] `Contacts.jsx` — `GET /api/contacts` efter godkännande; visa namn, telefon, e-post (ingen chatt)
 
 ### Profil
-- [ ] `Profile.jsx` — `GET /api/users/:id`; `CitySelect` — uppdatera stad (PUT user om backend stödjer, annars enligt API)
-- [ ] Länk till ägarens omdömen inför godkännande av förfrågan (visa data från API)
+- [x] `Profile.jsx` — `GET /api/users/:id`; `CitySelect` — uppdatera stad (PUT user om backend stödjer, annars enligt API)
+- [x] Länk till ägarens omdömen inför godkännande av förfrågan (visa data från API)
 
 ### Layout (funktion)
 - [ ] `BottomNav` — rutter: `/`, `/add-item`, `/contacts`, `/profile` (ikoner/text enligt UX senare)
