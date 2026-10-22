@@ -8,11 +8,13 @@ import { CONTACT_STATUSES, OWNER_ACTIONS, nextStepText } from "../components/bor
 import { countDays, formatPeriod } from "../components/borrow/dates.js";
 import { formatPrice } from "../components/items/formatPrice.js";
 import { formatRating } from "../components/reviews/formatRating.js";
+import ReviewList from "../components/reviews/ReviewList.jsx";
 import { getMyBorrowRequests, updateBorrowRequestStatus } from "../services/borrowRequestService.js";
 import { getUser } from "../services/userService.js";
 import { useAuth } from "../hooks/useAuth.js";
 import "../assets/styles/items.css";
 import "../assets/styles/dashboard.css";
+import "../assets/styles/profile.css";
 
 export default function BorrowingDetails() {
   const { id } = useParams();
@@ -21,7 +23,8 @@ export default function BorrowingDetails() {
   const userId = user.id;
 
   const [request, setRequest] = useState(null);
-  const [borrower, setBorrower] = useState(null); // lånarens publika profil med snittbetyg, hämtas bara för ägaren
+  const [borrower, setBorrower] = useState(null); // lånarens publika profil med omdömen, hämtas bara för ägaren
+  const [showReviews, setShowReviews] = useState(false);
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(null); // status som håller på att sparas
   const [actionError, setActionError] = useState(null);
@@ -30,6 +33,7 @@ export default function BorrowingDetails() {
     let cancelled = false;
     setRequest(null);
     setBorrower(null);
+    setShowReviews(false);
     setError(null);
     setActionError(null);
 
@@ -163,10 +167,34 @@ export default function BorrowingDetails() {
         {isOwner && borrower && (
           <div>
             <dt>Lånarens omdömen</dt>
-            <dd>{formatRating(borrower)}</dd>
+            <dd>
+              {formatRating(borrower)}
+              {borrower.review_count > 0 && (
+                <>
+                  {" · "}
+                  <button
+                    type="button"
+                    className="link-button"
+                    aria-expanded={showReviews}
+                    aria-controls="borrower-reviews"
+                    onClick={() => setShowReviews(!showReviews)}
+                  >
+                    {showReviews ? "Dölj" : "Visa"}
+                  </button>
+                </>
+              )}
+            </dd>
           </div>
         )}
       </dl>
+
+      {/* Ägaren läser lånarens omdömen innan beslut (Projektplan 8.4, UI.UX.md: Förfrågan) */}
+      {isOwner && borrower && showReviews && (
+        <div className="card" id="borrower-reviews">
+          <h2 className="section-title">Omdömen om {request.borrower_name}</h2>
+          <ReviewList reviews={borrower.reviews} />
+        </div>
+      )}
 
       <div className="card next-step">
         <p>{nextStepText(request.status, isOwner)}</p>

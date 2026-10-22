@@ -1,4 +1,4 @@
-// Annonskort: foto, rubrik, dygnspris, stad och "Ledig". Hela kortet är en länk till annonsen.
+// Annonskort: foto, rubrik, dygnspris, stad och "Ledig" eller "Inte tillgänglig". Hela kortet är en länk till annonsen.
 import { Link } from "react-router-dom";
 import { formatPrice } from "./formatPrice.js";
 
@@ -17,7 +17,12 @@ export default function ItemCard({ item }) {
         <p className="item-card-price">{formatPrice(item.lending_price)}</p>
         <div className="item-card-footer">
           <span className="muted">{item.location}</span>
-          {item.available && <span className="badge badge-available">Ledig</span>}
+          {/* Hem visar bara lediga annonser. Ej tillgängliga syns bara för ägaren under Mina annonser. */}
+          {item.available ? (
+            <span className="badge badge-available">Ledig</span>
+          ) : (
+            <span className="badge badge-returned">Inte tillgänglig</span>
+          )}
         </div>
       </div>
     </Link>

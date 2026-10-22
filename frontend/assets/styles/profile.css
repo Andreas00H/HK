@@ -1,4 +1,102 @@
-/* Profil, omdömen och stadsval (UI.UX.md: Profil). */
+/* Profil, omdömen och stadsval (UI.UX.md: Profil, 8.1). */
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.profile .card p {
+  margin: 0;
+}
+
+/* Knappen till Översikt: text till vänster, röd siffra och pil till höger */
+.dashboard-link {
+  justify-content: space-between;
+}
+
+.dashboard-link > span:first-child {
+  margin-right: auto;
+}
+
+.count-badge {
+  min-width: 22px;
+  padding: 0 var(--space-1);
+  border-radius: 11px;
+  background: var(--color-danger);
+  color: #fff;
+  font-size: var(--text-sm);
+  line-height: 22px;
+  text-align: center;
+}
+
+/* Mina uppgifter: avatar och namn överst, sedan e-post och telefon */
+.profile .owner-box {
+  margin-bottom: var(--space-2);
+}
+
+.profile .info-rows div {
+  padding: var(--space-3) 0;
+}
+
+/* Stad: rullista och Spara bredvid varandra */
+.city-row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+}
+
+.city-row .field {
+  flex: 1;
+}
+
+.profile .card .city-status {
+  margin-top: var(--space-2);
+}
+
+/* Omdömen */
+.profile .card .rating-summary {
+  margin-bottom: var(--space-2);
+  font-weight: 700;
+}
+
+.review-list {
+  list-style: none;
+  margin: 0 0 var(--space-2);
+  padding: 0;
+}
+
+.review-list li {
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-bg);
+}
+
+.review-list li:last-child {
+  border-bottom: none;
+}
+
+.review p {
+  margin: 0;
+}
+
+.review-stars {
+  color: var(--color-warning);
+  letter-spacing: 1px;
+}
+
+.review .review-comment,
+.profile .card .review-comment {
+  margin-top: var(--space-1);
+}
+
+/* Platshållare medan omdömena laddas */
+.skeleton-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
 
 /* Logga ut: grå textlänk centrerad längst ned */
 .logout-link {

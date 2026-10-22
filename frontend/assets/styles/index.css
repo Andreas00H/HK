@@ -103,6 +103,31 @@ textarea {
   font-weight: 700;
 }
 
+/* Sidrubrik i ett vitt fält med ram under, för sidor i bottenmenyn (UI.UX.md 8.3) */
+.page-header {
+  margin: calc(var(--space-4) * -1) calc(var(--space-4) * -1) 0;
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Knapp som ser ut som en textlänk */
+.link-button {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-primary);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Grå platshållare medan något laddas */
+.skeleton {
+  height: var(--text-md);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+}
+
 /* Döljer text visuellt men låter skärmläsare läsa den */
 .visually-hidden {
   position: absolute;
