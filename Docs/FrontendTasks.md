@@ -28,22 +28,22 @@ Checklista för frontend **utan UI-design** — layout, färger och visuellt uts
 - [x] `ItemCard`, `ItemList`, `SearchBar`, `CategoryFilter` — **data och props**, minimal markup
 
 ### Vecka 1 — manuell test
-- [ ] Register → login → JWT → skyddad sida
-- [ ] Lista, sök och filter mot backend
-- [ ] Logga ut; skyddade sidor omdirigerar
+- [x] Register → login → JWT → skyddad sida
+- [x] Lista, sök och filter mot backend
+- [x] Logga ut; skyddade sidor omdirigerar
 
 ---
 
 ## Vecka 2 — CRUD, lån, dashboard, kontakter
 
 ### Annonser (ägare)
-- [ ] `AddItem.jsx` + `ItemForm` — POST med JWT (rubrik, kategori, pris/dag, beskrivning, skick, stad, bild-URL, tillgänglig)
-- [ ] `EditItem.jsx` — PUT/DELETE endast egen annons; hantera 403
+- [x] `AddItem.jsx` + `ItemForm` — POST med JWT (rubrik, kategori, pris/dag, beskrivning, skick, stad, bild-URL, tillgänglig)
+- [x] `EditItem.jsx` — PUT/DELETE endast egen annons; hantera 403
 
 ### Låneförfrågningar
-- [ ] `BorrowRequestForm` — datum → `POST /api/borrow-requests`
-- [ ] `BorrowingDetails.jsx` — visa status; **ägare:** knappar för tillåtna status (`PUT /api/borrow-requests/:id`) enligt projektplan
-- [ ] `RequestStatus`, `RequestCard` — visa statustext och tillgängliga åtgärder (logik, inte design)
+- [x] `BorrowRequestForm` — datum → `POST /api/borrow-requests`
+- [x] `BorrowingDetails.jsx` — visa status; **ägare:** knappar för tillåtna status (`PUT /api/borrow-requests/:id`) enligt projektplan
+- [x] `RequestStatus`, `RequestCard` — visa statustext och tillgängliga åtgärder (logik, inte design)
 
 ### Översikt
 - [ ] `Dashboard.jsx` — `GET /api/borrow-requests/my` och/eller `GET /api/dashboard` — egna annonser, skickade/mottagna förfrågningar

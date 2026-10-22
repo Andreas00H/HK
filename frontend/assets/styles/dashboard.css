@@ -1,1 +1,63 @@
-/* Dashboard och förfrågningar. Ingen styling ännu. */
+/* Översikt och förfrågningar (UI.UX.md: Översikt, Förfrågan). */
+
+/* Förfrågan: en kolumn, lika bred som annonsdetaljer */
+.request-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.next-step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.next-step p {
+  margin: 0;
+}
+
+.request-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* Förfrågan i en lista. Hela kortet är en länk. */
+.request-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.request-card:hover,
+.request-card:focus-visible {
+  border-color: var(--color-primary);
+}
+
+.request-card p {
+  margin: 0;
+}
+
+.request-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.request-card-title {
+  margin: 0;
+  font-size: var(--text-md);
+  font-weight: 700;
+}
+
+.request-card-todo {
+  color: var(--color-primary);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
