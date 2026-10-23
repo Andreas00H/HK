@@ -1,15 +1,15 @@
-// Kortet Mina uppgifter på Profil (UI.UX.md 8.1): initial, namn, "Medlem sedan" och e-post och telefon.
-// Uppgifterna kan inte ändras i v1 (backend har ingen PUT för användare).
+// Kortet Mina uppgifter på Profil (Figma, gruppens stil): initial, namn, "Medlem sedan" och e-post och telefon.
+// Uppgifterna kan inte ändras i v1 (backend har ingen PUT för användare), så "Ändra uppgifter" finns inte än.
 export default function ProfileInfo({ name, email, phone, memberSince }) {
   return (
-    <div className="card">
+    <div className="card profile-info">
       <h2 className="section-title">Mina uppgifter</h2>
-      <div className="owner-box">
-        <span className="avatar" aria-hidden="true">
+      <div className="profile-person">
+        <span className="avatar avatar-square" aria-hidden="true">
           {name.charAt(0).toUpperCase()}
         </span>
         <div>
-          <p className="owner-name">{name}</p>
+          <p className="person-name">{name}</p>
           {memberSince && <p className="muted">Medlem sedan {memberSince}</p>}
         </div>
       </div>

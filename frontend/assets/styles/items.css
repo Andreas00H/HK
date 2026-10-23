@@ -1,9 +1,55 @@
-/* Annonslista, kort och sök (UI.UX.md: Hem, 4.4 Annonskort och Kategorichip). */
+/* Hem, annonskort och annonssidan (Figma: Hem, Annons). */
 
 .home {
   display: flex;
   flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* "Annonser i" och vald stad till vänster, klockan till höger */
+.home-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: var(--space-3);
+  padding-top: var(--space-4);
+}
+
+.home-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+}
+
+.home-heading-label {
+  color: var(--color-text-muted);
+  font-size: var(--text-md);
+  font-weight: 400;
+}
+
+.home-city {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.home-city .icon:first-child {
+  color: var(--color-primary);
+}
+
+.bell-dot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-danger);
 }
 
 /* Sökfält */
@@ -13,7 +59,7 @@
 
 .search-icon {
   position: absolute;
-  left: var(--space-3);
+  left: var(--space-4);
   top: 50%;
   transform: translateY(-50%);
   color: var(--color-text-muted);
@@ -21,12 +67,16 @@
 
 .search-bar input {
   width: 100%;
-  min-height: var(--tap);
-  padding: 0 var(--space-3) 0 40px;
+  min-height: var(--control);
+  padding: 0 var(--space-4) 0 52px;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
   background: var(--color-surface);
   color: var(--color-text);
+}
+
+.search-bar input::placeholder {
+  color: var(--color-text-muted);
 }
 
 .search-bar input:focus {
@@ -34,7 +84,7 @@
   border-color: var(--color-primary);
 }
 
-/* Kategorichips, scrollar i sidled */
+/* Kategorichips som piller, scrollar i sidled */
 .category-filter {
   display: flex;
   gap: var(--space-2);
@@ -51,34 +101,29 @@
 .chip {
   flex: none;
   min-height: 36px;
-  padding: 0 var(--space-3);
+  padding: 0 var(--space-4);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius);
+  border-radius: var(--radius-pill);
   background: var(--color-surface);
   color: var(--color-text);
+  font-weight: 500;
   cursor: pointer;
 }
 
 .chip-active {
-  background: var(--color-primary-light);
+  background: var(--color-primary);
   border-color: var(--color-primary);
-  color: var(--color-primary);
-  font-weight: 600;
+  color: #fff;
 }
 
-.list-meta {
-  display: flex;
-  justify-content: space-between;
-}
-
-/* Rutnät av kort */
+/* Rutnät av kort: 2 per rad i mobil, 3 på surfplatta och 4 på dator */
 .item-list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-2);
+  gap: var(--space-4);
 }
 
 @media (min-width: 600px) {
@@ -90,7 +135,6 @@
 @media (min-width: 900px) {
   .item-list {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--space-3);
   }
 }
 
@@ -101,7 +145,7 @@
   height: 100%;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
   overflow: hidden;
   color: var(--color-text);
   text-decoration: none;
@@ -113,11 +157,12 @@
 }
 
 .item-card-image {
-  aspect-ratio: 1 / 1;
-  background: var(--color-bg);
+  aspect-ratio: 8 / 7;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: var(--color-placeholder);
+  color: var(--color-text-muted);
 }
 
 .item-card-image img {
@@ -126,114 +171,95 @@
   object-fit: cover;
 }
 
-.item-card-noimage {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-}
-
 .item-card-body {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 2px;
   padding: var(--space-3);
   flex: 1;
 }
 
 .item-card-title {
+  max-width: 100%;
   margin: 0;
-  font-size: var(--text-md);
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 400;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .item-card-price {
-  margin: 0;
+  font-size: var(--text-lg);
   font-weight: 700;
 }
 
-.item-card-footer {
+.item-card-location {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
-  margin-top: auto;
-  padding-top: var(--space-2);
-  border-top: 1px solid var(--color-bg);
+  gap: var(--space-1);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
 }
 
-/* Meddelanden: tomt läge och fel */
-.message {
-  padding: var(--space-4);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
+.item-card-body .badge {
+  margin-top: var(--space-1);
 }
 
-.message p {
-  margin: 0;
-}
-
-.message-error {
-  color: var(--color-danger);
-  border-color: var(--color-danger);
-}
-
-/* Annonsdetaljer (UI.UX.md: Annonsdetaljer) */
+/* Annonssidan */
 .item-details {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-4);
   max-width: 640px;
   margin: 0 auto;
 }
 
-.details-topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.back-link,
-.icon-btn {
-  min-height: var(--tap);
-  padding: 0 var(--space-3);
-  border-radius: var(--radius);
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.back-link {
-  border: none;
-  background: none;
-  padding-left: 0;
-  color: var(--color-primary);
-}
-
-.icon-btn {
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-text);
-}
-
-.details-image {
-  aspect-ratio: 1 / 1;
-  max-height: 420px;
-  width: 100%;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  overflow: hidden;
+/* Stor bild i full bredd med Tillbaka och Dela ovanpå */
+.details-hero {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 320px;
+  margin: calc(var(--space-4) * -1) calc(var(--space-4) * -1) 0;
+  background: var(--color-placeholder);
+  color: var(--color-text-muted);
+  overflow: hidden;
 }
 
-.details-image img {
+.details-hero img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.details-hero .icon-button {
+  position: absolute;
+  top: calc(var(--space-4) + env(safe-area-inset-top));
+  border: none;
+}
+
+.hero-back {
+  left: var(--space-4);
+}
+
+.hero-share {
+  right: var(--space-4);
+}
+
+@media (min-width: 768px) {
+  .details-hero {
+    margin: 0;
+    border-radius: var(--radius-lg);
+  }
+}
+
+.details-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
 }
 
 .details-title-row {
@@ -243,82 +269,42 @@
   gap: var(--space-2);
 }
 
-.details-title-row .page-title {
+.details-title {
   margin: 0;
+  font-size: var(--text-xl);
+  font-weight: 700;
 }
 
 .details-price {
-  margin: var(--space-2) 0 0;
-  font-size: var(--text-xl);
-  font-weight: 700;
-  color: var(--color-primary);
-}
-
-.section-title {
-  font-size: var(--text-md);
-  font-weight: 700;
-  margin: 0 0 var(--space-2);
-}
-
-.description {
-  margin: 0;
-  white-space: pre-line;
-}
-
-/* Infotabell: etikett till vänster, värde till höger */
-.info-rows {
-  margin: 0;
-  padding: 0;
-}
-
-.info-rows div {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--space-3);
-  padding: var(--space-3);
-  border-bottom: 1px solid var(--color-bg);
-}
-
-.info-rows div:last-child {
-  border-bottom: none;
-}
-
-.info-rows dt {
   color: var(--color-text-muted);
 }
 
-.info-rows dd {
-  margin: 0;
-  font-weight: 600;
-  text-align: right;
-}
-
-/* Ägarruta */
-.owner-box {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-}
-
-.owner-box p {
-  margin: 0;
-}
-
-.owner-name {
-  font-weight: 700;
-}
-
-.avatar {
-  flex: none;
-  width: var(--tap);
-  height: var(--tap);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius);
-  background: var(--color-primary-light);
+.details-price strong {
   color: var(--color-primary);
+  font-size: var(--text-xl);
   font-weight: 700;
+}
+
+.details-location {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-text-muted);
+  font-size: 15px;
+}
+
+.details-info div {
+  padding: var(--space-3) 0;
+}
+
+.details-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.description {
+  white-space: pre-line;
 }
 
 /* Låneförfrågan */
@@ -328,14 +314,10 @@
   gap: var(--space-3);
 }
 
-.borrow-form .section-title {
-  margin: 0;
-}
-
 .date-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
 .date-row label {
@@ -343,12 +325,12 @@
   flex-direction: column;
   gap: var(--space-1);
   font-size: var(--text-sm);
-  color: var(--color-text-muted);
+  font-weight: 500;
 }
 
 .date-row input {
-  min-height: var(--tap);
-  padding: 0 var(--space-2);
+  min-height: var(--control);
+  padding: 0 var(--space-3);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   background: var(--color-surface);
@@ -363,22 +345,8 @@
 .rent-total {
   display: flex;
   justify-content: space-between;
-  margin: 0;
+  align-items: center;
   padding: var(--space-3);
   background: var(--color-bg);
   border-radius: var(--radius);
-}
-
-.form-error {
-  margin: 0;
-  color: var(--color-danger);
-}
-
-.borrow-sent p {
-  margin: 0;
-}
-
-.center {
-  text-align: center;
-  margin: 0;
 }

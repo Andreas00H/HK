@@ -18,8 +18,10 @@ export default function RequestCard({ request }) {
         <h2 className="request-card-title">{request.item_name}</h2>
         <RequestStatus status={request.status} />
       </div>
-      <p className="muted">{formatPeriod(request.start_date, request.end_date)}</p>
-      <p>{isOwner ? `Lånare: ${request.borrower_name}` : `Ägare: ${request.owner_name}`}</p>
+      <p className="muted">
+        {isOwner ? `Lånare: ${request.borrower_name}` : `Uthyrare: ${request.owner_name}`} ·{" "}
+        {formatPeriod(request.start_date, request.end_date)}
+      </p>
       {actions.length > 0 && (
         <p className="request-card-todo">
           Att göra: {actions.map((action) => action.label.toLowerCase()).join(" eller ")}

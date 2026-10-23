@@ -1,7 +1,8 @@
-// Lägg upp annons (UI.UX.md, Lägg upp / Redigera). Skickas med POST /api/items och JWT.
+// Ny annons (Figma): kryss och rubrik överst, formuläret under. Skickas med POST /api/items och JWT.
 // Staden förifylls med den valda staden från profilen. Efter publicering visas den nya annonsen.
 import { useNavigate } from "react-router-dom";
 import ItemForm from "../components/items/ItemForm.jsx";
+import TopBar from "../components/common/TopBar.jsx";
 import { createItem, updateItem } from "../services/itemService.js";
 import { useAuth } from "../hooks/useAuth.js";
 import { useCity } from "../hooks/useCity.js";
@@ -11,6 +12,13 @@ export default function AddItem() {
   const { token } = useAuth();
   const { city } = useCity();
   const navigate = useNavigate();
+
+  // Krysset stänger: tillbaka till förra sidan i appen, eller till Hem om sidan öppnades direkt.
+  // React Router numrerar sidorna i webbläsarens historik (idx), där 0 är första sidan i appen.
+  function handleClose() {
+    if (window.history.state?.idx > 0) navigate(-1);
+    else navigate("/");
+  }
 
   async function handleSubmit(fields) {
     const item = await createItem(fields, token);
@@ -35,7 +43,7 @@ export default function AddItem() {
 
   return (
     <section className="page form-page">
-      <h1 className="page-title">Lägg upp annons</h1>
+      <TopBar title="Ny annons" variant="close" onBack={handleClose} />
       <ItemForm
         initialValues={{
           image_url: "",
@@ -47,7 +55,7 @@ export default function AddItem() {
           description: "",
           available: true,
         }}
-        submitLabel="Publicera"
+        submitLabel="Publicera annons"
         sendingLabel="Publicerar…"
         onSubmit={handleSubmit}
       />

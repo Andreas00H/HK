@@ -1,10 +1,11 @@
-// Översikt (UI.UX.md, Översikt): flikarna Mottagna, Skickade och Mina annonser. Data från GET /api/dashboard.
+// Översikt: flikarna Mottagna, Skickade och Mina annonser, i samma stil som Kontakter (Figma). Data från GET /api/dashboard.
 // Varje förfrågan leder till sin sida, där ägaren byter status. Fliken sparas i adressen (?flik=skickade),
 // så att Tillbaka från en förfrågan kommer till samma flik.
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import RequestCard from "../components/borrow/RequestCard.jsx";
 import ItemList from "../components/items/ItemList.jsx";
+import TopBar from "../components/common/TopBar.jsx";
 import { getDashboard } from "../services/dashboardService.js";
 import { useAuth } from "../hooks/useAuth.js";
 import "../assets/styles/items.css";
@@ -73,22 +74,11 @@ export default function Dashboard() {
 
   return (
     <section className="page dashboard">
-      <div className="details-topbar">
-        <button type="button" className="back-link" onClick={handleBack}>
-          ← Tillbaka
-        </button>
-      </div>
-      <h1 className="page-title">Mina annonser &amp; förfrågningar</h1>
+      <TopBar title="Mina annonser och förfrågningar" onBack={handleBack} />
 
-      <div className="tabs" role="group" aria-label="Visa">
+      <div className="segmented" role="group" aria-label="Visa">
         {TABS.map((t) => (
-          <button
-            key={t.key}
-            type="button"
-            className={"tab" + (tab === t.key ? " tab-active" : "")}
-            aria-pressed={tab === t.key}
-            onClick={() => selectTab(t.key)}
-          >
+          <button key={t.key} type="button" aria-pressed={tab === t.key} onClick={() => selectTab(t.key)}>
             {t.label}
             {counts && ` (${counts[t.key]})`}
           </button>

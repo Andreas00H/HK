@@ -54,13 +54,13 @@ Checklista för frontend **utan UI-design** — layout, färger och visuellt uts
 - [x] Länk till ägarens omdömen inför godkännande av förfrågan (visa data från API)
 
 ### Layout (funktion)
-- [ ] `BottomNav` — rutter: `/`, `/add-item`, `/contacts`, `/profile` (ikoner/text enligt UX senare)
-- [ ] `Layout.jsx` — wrapper + outlet
+- [x] `BottomNav` — rutter: `/`, `/add-item`, `/contacts`, `/profile` (ikoner/text enligt UX senare)
+- [x] `Layout.jsx` — wrapper + outlet
 
 ### Vecka 2 — manuell test
-- [ ] Skapa/redigera/radera egen annons
-- [ ] Hela låneflödet i UI (förfrågan → godkänn → statussteg)
-- [ ] Kontakter syns först efter godkännande
+- [x] Skapa/redigera/radera egen annons
+- [x] Hela låneflödet i UI (förfrågan → godkänn → statussteg)
+- [x] Kontakter syns först efter godkännande
 
 ---
 
