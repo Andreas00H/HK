@@ -17,10 +17,10 @@ export const OWNER_ACTIONS = {
     { status: "DECLINED", label: "Neka", danger: true },
   ],
   ACCEPTED: [
-    { status: "BORROWED", label: "Markera som utlämnad" },
-    { status: "DECLINED", label: "Avböj förfrågan", danger: true },
+    { status: "BORROWED", label: "Markera utlämnad" },
+    { status: "DECLINED", label: "Avböj", danger: true },
   ],
-  BORROWED: [{ status: "RETURNED", label: "Markera som återlämnad" }],
+  BORROWED: [{ status: "RETURNED", label: "Markera återlämnad" }],
   RETURNED: [{ status: "COMPLETED", label: "Avsluta lånet" }],
   DECLINED: [],
   COMPLETED: [],

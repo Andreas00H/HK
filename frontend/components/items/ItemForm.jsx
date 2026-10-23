@@ -1,8 +1,11 @@
-// Formulär för att skapa och redigera annons (UI.UX.md, Lägg upp / Redigera). Används av AddItem och EditItem.
+// Formulär för att skapa och redigera annons (Figma: Ny annons). Används av AddItem och EditItem.
 // Fälten kontrolleras innan något skickas. onSubmit får fälten i det format backend vill ha och ska kasta fel
 // om det inte gick att spara, då visas backendens meddelande ovanför knappen.
+// Backend har en bild per annons (image_url), så fotot är en länk. Stad och Tillgänglig finns inte i designen
+// men krävs av backend och projektplanen, så de ligger sist.
 import { useEffect, useState } from "react";
 import Input from "../common/Input.jsx";
+import Icon from "../common/Icon.jsx";
 import { getCategories } from "../../services/categoryService.js";
 
 // Skick att välja mellan. En annons med annat skick (t.ex. skapad i Postman) behåller sitt eget som ett extra val.
@@ -27,13 +30,13 @@ function validate(values) {
   if (!isImageUrl(values.image_url.trim())) errors.image_url = "Fyll i en länk till en bild som börjar med http:// eller https://.";
   if (!values.name.trim()) errors.name = "Fyll i en rubrik.";
   if (!values.category_id) errors.category_id = "Välj en kategori.";
-  if (!values.condition) errors.condition = "Välj skick.";
+  if (!values.description.trim()) errors.description = "Skriv en beskrivning.";
   const price = Number(values.lending_price);
   if (values.lending_price === "" || !Number.isFinite(price) || price < 0 || price > MAX_PRICE) {
     errors.lending_price = "Fyll i ett pris mellan 0 och 100 000 kr.";
   }
+  if (!values.condition) errors.condition = "Välj skick.";
   if (!values.location.trim()) errors.location = "Fyll i stad.";
-  if (!values.description.trim()) errors.description = "Skriv en beskrivning.";
   return errors;
 }
 
@@ -58,6 +61,7 @@ export default function ItemForm({ initialValues, submitLabel, sendingLabel, onS
 
   const imageUrl = values.image_url.trim();
   const imageBroken = imageUrl !== "" && brokenImage === imageUrl;
+  const showPreview = isImageUrl(imageUrl) && !imageBroken;
 
   function update(field) {
     return (event) => setValues({ ...values, [field]: event.target.value });
@@ -93,25 +97,49 @@ export default function ItemForm({ initialValues, submitLabel, sendingLabel, onS
   }
 
   return (
-    <form className="card item-form" onSubmit={handleSubmit} noValidate>
-      {/* Uppladdning av foton finns inte i v1, en länk till bilden räcker (Projektplan 8.10) */}
-      <Input
-        id="image_url"
-        label="Bild (länk)"
-        type="url"
-        value={values.image_url}
-        onChange={update("image_url")}
-        error={errors.image_url}
-        hint={imageBroken ? "Bilden kunde inte visas. Kontrollera länken." : "Länk till en bild på saken, t.ex. https://…"}
-        maxLength={2000}
-      />
-      {isImageUrl(imageUrl) && !imageBroken && (
-        <div className="image-preview">
-          <img src={imageUrl} alt="Förhandsvisning av bilden" onError={() => setBrokenImage(imageUrl)} />
+    <form className="item-form" onSubmit={handleSubmit} noValidate>
+      <div className="field">
+        <label htmlFor="image_url">Foto</label>
+        {/* Ett tryck på rutan flyttar markören till länkfältet under. Rutan är bara utseende för skärmläsare. */}
+        <div
+          className={"photo-tile" + (showPreview ? "" : " photo-add")}
+          aria-hidden="true"
+          onClick={() => document.getElementById("image_url")?.focus()}
+        >
+          {showPreview ? (
+            <img src={imageUrl} alt="" onError={() => setBrokenImage(imageUrl)} />
+          ) : (
+            <>
+              <Icon name="camera" />
+              Lägg till
+            </>
+          )}
         </div>
-      )}
+        <input
+          id="image_url"
+          type="url"
+          placeholder="Klistra in en länk till bilden"
+          value={values.image_url}
+          onChange={update("image_url")}
+          aria-invalid={errors.image_url ? true : undefined}
+          aria-describedby="image_url-message"
+          maxLength={2000}
+        />
+        <p id="image_url-message" className={errors.image_url ? "field-error" : "field-hint"}>
+          {errors.image_url ||
+            (imageBroken ? "Bilden kunde inte visas. Kontrollera länken." : "Bilden blir omslag i annonsen.")}
+        </p>
+      </div>
 
-      <Input id="name" label="Rubrik" value={values.name} onChange={update("name")} error={errors.name} maxLength={150} />
+      <Input
+        id="name"
+        label="Rubrik"
+        placeholder="Till exempel HDMI kabel 2 m"
+        value={values.name}
+        onChange={update("name")}
+        error={errors.name}
+        maxLength={150}
+      />
 
       <Input
         as="select"
@@ -130,6 +158,36 @@ export default function ItemForm({ initialValues, submitLabel, sendingLabel, onS
       </Input>
 
       <Input
+        as="textarea"
+        id="description"
+        label="Beskrivning"
+        placeholder="Beskriv skick, storlek och var den hämtas"
+        rows={4}
+        value={values.description}
+        onChange={update("description")}
+        error={errors.description}
+        maxLength={2000}
+      />
+
+      <Input
+        id="lending_price"
+        label={
+          <>
+            Pris per dag<span className="visually-hidden"> i kronor</span>
+          </>
+        }
+        type="number"
+        inputMode="numeric"
+        min="0"
+        max={MAX_PRICE}
+        placeholder="0"
+        suffix="kr per dag"
+        value={values.lending_price}
+        onChange={update("lending_price")}
+        error={errors.lending_price}
+      />
+
+      <Input
         as="select"
         id="condition"
         label="Skick"
@@ -146,18 +204,6 @@ export default function ItemForm({ initialValues, submitLabel, sendingLabel, onS
       </Input>
 
       <Input
-        id="lending_price"
-        label="Pris per dag (kr)"
-        type="number"
-        inputMode="numeric"
-        min="0"
-        max={MAX_PRICE}
-        value={values.lending_price}
-        onChange={update("lending_price")}
-        error={errors.lending_price}
-      />
-
-      <Input
         id="location"
         label="Stad"
         autoComplete="address-level2"
@@ -167,32 +213,21 @@ export default function ItemForm({ initialValues, submitLabel, sendingLabel, onS
         maxLength={100}
       />
 
-      <Input
-        as="textarea"
-        id="description"
-        label="Beskrivning"
-        rows={5}
-        value={values.description}
-        onChange={update("description")}
-        error={errors.description}
-        hint="Skriv gärna om priset går att förhandla och när saken ska vara tillbaka."
-        maxLength={2000}
-      />
+      <label className="switch-field">
+        <span>
+          <span className="switch-label">Tillgänglig för utlåning</span>
+          <span className="field-hint">Stäng av om saken inte kan lånas just nu. Den syns då inte på Hem.</span>
+        </span>
+        <input
+          type="checkbox"
+          role="switch"
+          className="switch"
+          checked={values.available}
+          onChange={(event) => setValues({ ...values, available: event.target.checked })}
+        />
+      </label>
 
-      <div className="field">
-        <label className="checkbox-field">
-          <input
-            type="checkbox"
-            checked={values.available}
-            onChange={(event) => setValues({ ...values, available: event.target.checked })}
-            aria-describedby="available-message"
-          />
-          Tillgänglig för utlåning
-        </label>
-        <p id="available-message" className="field-hint">
-          Stäng av om saken inte kan lånas just nu. Den syns då inte på Hem.
-        </p>
-      </div>
+      <p className="info-box">Tips: vill du kunna förhandla priset, skriv det i beskrivningen.</p>
 
       {errors.form && (
         <p className="field-error" role="alert">

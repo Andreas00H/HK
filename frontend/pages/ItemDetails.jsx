@@ -1,12 +1,18 @@
-// Annonsdetaljer: bild, dygnspris, info, beskrivning, ägare och låneförfrågan (UI.UX.md, Annonsdetaljer).
+// Annons (Figma): stor bild med Tillbaka och Dela, rubrik, dygnspris, plats, uppgifter, beskrivning och ägaren.
+// Längst ned en fast rad med priset och knappen för låneförfrågan. Ägaren ser "Redigera annons" i stället.
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getItem } from "../services/itemService.js";
 import { getUser } from "../services/userService.js";
 import { formatPrice } from "../components/items/formatPrice.js";
 import { formatRating } from "../components/reviews/formatRating.js";
-import { useAuth } from "../hooks/useAuth.js";
+import { formatDate } from "../components/common/formatDate.js";
+import { initials } from "../components/common/initials.js";
+import Icon from "../components/common/Icon.jsx";
+import TopBar from "../components/common/TopBar.jsx";
+import ActionBar from "../components/common/ActionBar.jsx";
 import BorrowRequestForm from "../components/borrow/BorrowRequestForm.jsx";
+import { useAuth } from "../hooks/useAuth.js";
 import "../assets/styles/items.css";
 
 export default function ItemDetails() {
@@ -15,7 +21,8 @@ export default function ItemDetails() {
   const [item, setItem] = useState(null);
   const [owner, setOwner] = useState(null);
   const [error, setError] = useState(null);
-  const [copied, setCopied] = useState(false);
+  const [brokenImage, setBrokenImage] = useState(false);
+  const [shareNote, setShareNote] = useState(null);
 
   // Utloggad: knappen leder till Logga in. Ägaren ser "Redigera annons" i stället för förfrågan.
   const { token, user } = useAuth();
@@ -25,12 +32,13 @@ export default function ItemDetails() {
     setItem(null);
     setOwner(null);
     setError(null);
+    setBrokenImage(false);
 
     getItem(id)
       .then((result) => {
         if (cancelled) return;
         setItem(result);
-        // Ägarens publika profil ger snittbetyg och "medlem sedan". Går det fel visas bara namnet.
+        // Ägarens publika profil ger snittbetyget. Går det fel visas bara namnet.
         return getUser(result.owner_id).then((profile) => {
           if (!cancelled) setOwner(profile);
         }).catch(() => {});
@@ -59,111 +67,132 @@ export default function ItemDetails() {
         await navigator.share({ title: item.name, url });
       } else {
         await navigator.clipboard.writeText(url);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+        setShareNote("Länken är kopierad");
+        setTimeout(() => setShareNote(null), 2000);
       }
     } catch {
       // Användaren avbröt delningen, inget att göra
     }
   }
 
-  const topBar = (
-    <div className="details-topbar">
-      <button type="button" className="back-link" onClick={handleBack}>
-        ← Tillbaka
-      </button>
-      {item && (
-        <button type="button" className="icon-btn" onClick={handleShare} aria-label="Dela annonsen">
-          {copied ? "Länk kopierad" : "Dela"}
-        </button>
-      )}
-    </div>
-  );
-
-  if (error) {
+  if (error || !item) {
     return (
       <section className="page">
-        {topBar}
-        <p className="message message-error" role="alert">
-          Kunde inte hämta annonsen. {error}
-        </p>
-      </section>
-    );
-  }
-
-  if (!item) {
-    return (
-      <section className="page">
-        {topBar}
-        <p className="muted">Hämtar annonsen…</p>
+        <TopBar onBack={handleBack} />
+        {error ? (
+          <p className="message message-error" role="alert">
+            Kunde inte hämta annonsen. {error}
+          </p>
+        ) : (
+          <p className="muted">Hämtar annonsen…</p>
+        )}
       </section>
     );
   }
 
   const isOwner = user && user.id === item.owner_id;
   const ownerName = owner?.name || item.owner_name;
+  const priceSummary = (
+    <>
+      <strong>{formatPrice(item.lending_price)}</strong>
+      <span className="muted">Betalas till uthyraren</span>
+    </>
+  );
 
   return (
-    <article className="page item-details">
-      {topBar}
-
-      <div className="details-image">
-        {item.image_url ? <img src={item.image_url} alt={item.name} /> : <span className="item-card-noimage">Ingen bild</span>}
+    <article className="page item-details has-action-bar">
+      <div className="details-hero">
+        {item.image_url && !brokenImage ? (
+          <img src={item.image_url} alt={item.name} onError={() => setBrokenImage(true)} />
+        ) : (
+          <Icon name="camera" size={40} />
+        )}
+        <button type="button" className="icon-button hero-back" onClick={handleBack} aria-label="Tillbaka">
+          <Icon name="chevron-left" />
+        </button>
+        <button type="button" className="icon-button hero-share" onClick={handleShare} aria-label="Dela annonsen">
+          <Icon name="share" size={20} />
+        </button>
       </div>
 
-      <div className="card">
+      {shareNote && (
+        <p className="muted" role="status">
+          {shareNote}
+        </p>
+      )}
+
+      <div className="details-head">
         <div className="details-title-row">
-          <h1 className="page-title">{item.name}</h1>
-          {item.available ? (
-            <span className="badge badge-available">Ledig</span>
-          ) : (
-            <span className="badge badge-returned">Inte tillgänglig</span>
-          )}
+          <h1 className="details-title">{item.name}</h1>
+          {!item.available && <span className="badge badge-returned">Inte tillgänglig</span>}
         </div>
-        <p className="details-price">{formatPrice(item.lending_price)}</p>
+        <p className="details-price">
+          <strong>{Number(item.lending_price).toLocaleString("sv-SE")} kr</strong> per dag
+        </p>
+        <p className="details-location">
+          <Icon name="pin" size={18} />
+          {item.location}
+        </p>
       </div>
 
-      <dl className="card info-rows">
+      <dl className="card info-rows details-info">
         <div>
-          <dt>Kategori</dt>
-          <dd>{item.category_name}</dd>
+          <dt>
+            <Icon name="calendar" size={20} />
+            Upplagd
+          </dt>
+          <dd>{formatDate(item.created_at)}</dd>
         </div>
         <div>
-          <dt>Skick</dt>
+          <dt>
+            <Icon name="check" size={20} />
+            Skick
+          </dt>
           <dd>{item.condition}</dd>
         </div>
         <div>
-          <dt>Stad</dt>
-          <dd>{item.location}</dd>
+          <dt>
+            <Icon name="chevron-right" size={20} />
+            Kategori
+          </dt>
+          <dd>{item.category_name}</dd>
         </div>
       </dl>
 
-      <div className="card">
+      <section className="details-section">
         <h2 className="section-title">Beskrivning</h2>
         <p className="description">{item.description}</p>
-      </div>
+      </section>
 
-      <div className="card owner-box">
+      <div className="card person-card">
         <span className="avatar" aria-hidden="true">
-          {ownerName?.charAt(0).toUpperCase()}
+          {initials(ownerName)}
         </span>
         <div>
-          <p className="owner-name">{ownerName}</p>
-          <p className="muted">
-            {formatRating(owner)}
-            {owner?.created_at && ` · Medlem sedan ${new Date(owner.created_at).getFullYear()}`}
-          </p>
+          <p className="person-name">{ownerName}</p>
+          {owner && (
+            <p className="rating-line">
+              {owner.review_count > 0 && <Icon name="star" size={16} className="star" />}
+              {formatRating(owner)}
+            </p>
+          )}
         </div>
       </div>
 
       {isOwner ? (
-        <Link to={`/items/${item.id}/edit`} className="btn btn-secondary btn-block">
-          Redigera annons
-        </Link>
+        <ActionBar summary={priceSummary}>
+          <Link to={`/items/${item.id}/edit`} className="btn btn-primary">
+            Redigera annons
+          </Link>
+        </ActionBar>
       ) : item.available ? (
-        <BorrowRequestForm item={item} token={token} />
+        <BorrowRequestForm item={item} token={token} summary={priceSummary} />
       ) : (
-        <p className="message">Saken är inte tillgänglig för utlåning just nu.</p>
+        <ActionBar summary={priceSummary}>
+          <button type="button" className="btn btn-primary" disabled>
+            Inte tillgänglig
+          </button>
+        </ActionBar>
       )}
     </article>
   );

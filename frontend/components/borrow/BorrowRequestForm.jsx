@@ -1,11 +1,14 @@
-// Formulär för att begära lån under ett datumintervall (POST /api/borrow-requests). Visar beräknad hyra (dygnspris × antal dagar).
-import { useState } from "react";
+// Låneförfrågan på annonsen: välj period och skicka med POST /api/borrow-requests. Visar beräknad hyra
+// (dygnspris × antal dagar). Knappen ligger i den fasta raden längst ned (Figma), med summary till vänster.
+import { useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import ActionBar from "../common/ActionBar.jsx";
 import { createBorrowRequest } from "../../services/borrowRequestService.js";
 import { countDays, todayString } from "./dates.js";
 
-export default function BorrowRequestForm({ item, token }) {
+export default function BorrowRequestForm({ item, token, summary }) {
   const location = useLocation();
+  const startRef = useRef(null);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [status, setStatus] = useState("idle"); // idle | sending | sent
@@ -21,10 +24,13 @@ export default function BorrowRequestForm({ item, token }) {
     setError(null);
     if (!startDate || !endDate) {
       setError("Välj både från- och till-datum.");
+      // Knappen sitter längst ned, så markören flyttas upp till datumen
+      startRef.current?.focus();
       return;
     }
     if (endDate < startDate) {
       setError("Till-datum kan inte vara före från-datum.");
+      startRef.current?.focus();
       return;
     }
     setStatus("sending");
@@ -40,12 +46,18 @@ export default function BorrowRequestForm({ item, token }) {
 
   if (status === "sent") {
     return (
-      <div className="card borrow-sent" role="status">
-        <p>
-          <strong>Förfrågan skickad!</strong> Ägaren får nu godkänna eller neka.{" "}
-          <Link to={`/borrow-requests/${requestId}`}>Följ förfrågan</Link>
-        </p>
-      </div>
+      <>
+        <div className="card borrow-sent" role="status">
+          <p>
+            <strong>Förfrågan skickad!</strong> Ägaren får nu godkänna eller neka.
+          </p>
+        </div>
+        <ActionBar summary={summary}>
+          <Link to={`/borrow-requests/${requestId}`} className="btn btn-primary">
+            Följ förfrågan
+          </Link>
+        </ActionBar>
+      </>
     );
   }
 
@@ -56,7 +68,13 @@ export default function BorrowRequestForm({ item, token }) {
       <div className="date-row">
         <label>
           Från
-          <input type="date" min={today} value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+          <input
+            ref={startRef}
+            type="date"
+            min={today}
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
         </label>
         <label>
           Till
@@ -79,18 +97,19 @@ export default function BorrowRequestForm({ item, token }) {
         </p>
       )}
 
-      {token ? (
-        <button type="submit" className="btn btn-primary btn-block" disabled={status === "sending"}>
-          {status === "sending" ? "Skickar…" : "Skicka låneförfrågan"}
-        </button>
-      ) : (
-        // Efter inloggning kommer man tillbaka till annonsen. replace: inloggningen ersätter annonsen i historiken,
-        // annars hamnar man på samma annons igen när man trycker Tillbaka efter inloggningen.
-        <Link to="/login" replace state={{ from: location }} className="btn btn-primary btn-block">
-          Logga in för att skicka förfrågan
-        </Link>
-      )}
-      <p className="muted center">Betalning och upphämtning sköter ni själva efter godkännande.</p>
+      <ActionBar summary={summary}>
+        {token ? (
+          <button type="submit" className="btn btn-primary" disabled={status === "sending"}>
+            {status === "sending" ? "Skickar…" : "Skicka förfrågan"}
+          </button>
+        ) : (
+          // Efter inloggning kommer man tillbaka till annonsen. replace: inloggningen ersätter annonsen i historiken,
+          // annars hamnar man på samma annons igen när man trycker Tillbaka efter inloggningen.
+          <Link to="/login" replace state={{ from: location }} className="btn btn-primary">
+            Logga in för att låna
+          </Link>
+        )}
+      </ActionBar>
     </form>
   );
 }

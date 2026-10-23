@@ -1,71 +1,71 @@
-// Kort för en kontakt (UI.UX.md 8.2): motpartens namn och status, vilken sak det gäller, period, telefon och e-post.
-// Ring och Mejla öppnar telefonen eller e-postprogrammet. Saknas ett av fälten döljs den knappen och den andra tar hela bredden.
-// contact kommer från GET /api/contacts.
-import { Link } from "react-router-dom";
+// Kort för en kontakt (Figma: Kontakter): initialer, namn, roll och sak, status och telefon och e-post med Kopiera.
+// Telefon och e-post är också länkar (tel: och mailto:). En förfrågan som väntar har inga kontaktuppgifter än.
+// contact har samma fält som GET /api/contacts: request_id, status, item_name, my_role, contact_name,
+// contact_phone och contact_email.
+import { useState } from "react";
 import RequestStatus from "../borrow/RequestStatus.jsx";
-import { formatPeriod } from "../borrow/dates.js";
-
-// Små ikoner framför telefon och e-post
-const ICONS = {
-  phone: "M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2",
-  mail: "M3 6h18v12H3z M3 6l9 7 9-7",
-};
-
-function ContactIcon({ name }) {
-  return (
-    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" aria-hidden="true">
-      <path d={ICONS[name]} />
-    </svg>
-  );
-}
+import Icon from "../common/Icon.jsx";
+import { initials } from "../common/initials.js";
 
 export default function ContactCard({ contact }) {
+  const [copied, setCopied] = useState(null); // "phone" eller "email" en kort stund efter Kopiera
+
+  async function copy(kind, value) {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(kind);
+      setTimeout(() => setCopied((current) => (current === kind ? null : current)), 2000);
+    } catch {
+      // Webbläsaren tillät inte kopiering. Numret och adressen syns ändå.
+    }
+  }
+
   // tel: fungerar bäst utan mellanslag och bindestreck
-  const phoneHref = contact.contact_phone ? `tel:${contact.contact_phone.replace(/[^\d+]/g, "")}` : null;
-  const emailHref = contact.contact_email ? `mailto:${contact.contact_email}` : null;
+  const rows = [
+    contact.contact_phone && {
+      kind: "phone",
+      icon: "phone",
+      value: contact.contact_phone,
+      href: `tel:${contact.contact_phone.replace(/[^\d+]/g, "")}`,
+      label: "telefonnumret",
+    },
+    contact.contact_email && {
+      kind: "email",
+      icon: "mail",
+      value: contact.contact_email,
+      href: `mailto:${contact.contact_email}`,
+      label: "e-postadressen",
+    },
+  ].filter(Boolean);
 
   return (
     <article className="card contact-card">
       <div className="contact-card-top">
         <span className="avatar" aria-hidden="true">
-          {contact.contact_name.charAt(0).toUpperCase()}
+          {initials(contact.contact_name)}
         </span>
-        <h2 className="contact-name">{contact.contact_name}</h2>
+        <div className="contact-card-who">
+          <h2 className="contact-name">{contact.contact_name}</h2>
+          <p className="muted">
+            {contact.my_role === "BORROWER" ? "Hyr ut" : "Lånar"} · {contact.item_name}
+          </p>
+        </div>
         <RequestStatus status={contact.status} />
       </div>
 
-      <p>
-        {contact.my_role === "BORROWER" ? "Du lånar: " : "Lånar av dig: "}
-        <Link to={`/borrow-requests/${contact.request_id}`}>{contact.item_name}</Link>
-      </p>
-      <p className="muted">{formatPeriod(contact.start_date, contact.end_date)}</p>
-
-      {phoneHref && (
-        <a className="contact-line" href={phoneHref}>
-          <ContactIcon name="phone" />
-          {contact.contact_phone}
-        </a>
-      )}
-      {emailHref && (
-        <a className="contact-line" href={emailHref}>
-          <ContactIcon name="mail" />
-          {contact.contact_email}
-        </a>
-      )}
-
-      {(phoneHref || emailHref) && (
-        <div className="contact-actions">
-          {phoneHref && (
-            <a className="btn btn-primary" href={phoneHref}>
-              Ring
-            </a>
-          )}
-          {emailHref && (
-            <a className="btn btn-secondary" href={emailHref}>
-              Mejla
-            </a>
-          )}
-        </div>
+      {contact.status === "REQUESTED" ? (
+        <p className="muted">Kontaktuppgifterna visas när förfrågan godkänns.</p>
+      ) : (
+        rows.map((row) => (
+          <div key={row.kind} className="contact-row">
+            <Icon name={row.icon} size={20} />
+            <a href={row.href}>{row.value}</a>
+            <button type="button" className="link-button" onClick={() => copy(row.kind, row.value)}>
+              {copied === row.kind ? "Kopierat" : "Kopiera"}
+              <span className="visually-hidden"> {row.label}</span>
+            </button>
+          </div>
+        ))
       )}
     </article>
   );

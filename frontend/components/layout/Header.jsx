@@ -1,6 +1,7 @@
-// Sidhuvud: logotyp till vänster och vald stad till höger. På dator visas menyn här i stället för i botten.
+// Sidhuvud på dator: logotyp, menyn och vald stad. I mobil döljs det, där har varje sida sitt eget toppfält (Figma).
 import { Link, NavLink } from "react-router-dom";
 import { NAV_ITEMS } from "./navItems.js";
+import Icon from "../common/Icon.jsx";
 import { useCity } from "../../hooks/useCity.js";
 
 export default function Header() {
@@ -28,7 +29,7 @@ export default function Header() {
         </nav>
 
         <Link to="/profile" className="header-city" aria-label={"Vald stad: " + city + ". Byt stad på Profil"}>
-          {city} ▾
+          {city} <Icon name="chevron-down" size={18} />
         </Link>
       </div>
     </header>
