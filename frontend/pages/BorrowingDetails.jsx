@@ -21,6 +21,7 @@ import { getMyBorrowRequests, updateBorrowRequestStatus } from "../services/borr
 import { getUser } from "../services/userService.js";
 import { useAuth } from "../hooks/useAuth.js";
 import "../assets/styles/items.css";
+import "../assets/styles/forms.css";
 import "../assets/styles/dashboard.css";
 import "../assets/styles/profile.css";
 
@@ -42,6 +43,7 @@ export default function BorrowingDetails() {
   const [request, setRequest] = useState(null);
   const [counterpart, setCounterpart] = useState(null); // motpartens publika profil med omdömen
   const [showAllReviews, setShowAllReviews] = useState(false);
+  const [reviewSent, setReviewSent] = useState(false); // omdöme skickat nu, så att tacket ligger kvar
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(null); // status som håller på att sparas
   const [actionError, setActionError] = useState(null);
@@ -51,6 +53,7 @@ export default function BorrowingDetails() {
     setRequest(null);
     setCounterpart(null);
     setShowAllReviews(false);
+    setReviewSent(false);
     setError(null);
     setActionError(null);
 
@@ -131,6 +134,16 @@ export default function BorrowingDetails() {
   const actions = isOwner ? [...(OWNER_ACTIONS[request.status] || [])].sort((a, b) => !!b.danger - !!a.danger) : [];
   const days = countDays(request.start_date, request.end_date);
   const reviews = counterpart?.reviews || [];
+  // Har jag redan lämnat omdöme om motparten för det här lånet visas inte formuläret igen
+  const alreadyReviewed = reviews.some((review) => review.borrowing_id === request.id && review.reviewer_id === userId);
+
+  // Efter ett nytt omdöme hämtas motpartens profil igen, så att omdömet syns i listan direkt
+  function handleReviewSent() {
+    setReviewSent(true);
+    getUser(isOwner ? request.borrower_id : request.owner_id)
+      .then(setCounterpart)
+      .catch(() => {});
+  }
 
   return (
     <article className={"page request-details" + (actions.length > 0 ? " has-action-bar" : "")}>
@@ -193,8 +206,10 @@ export default function BorrowingDetails() {
       )}
 
       {/* Omdöme kan bara lämnas när lånet är avslutat (Projektplan 8.7). Båda parter får lämna ett. */}
-      {request.status === "COMPLETED" && (
-        <ReviewForm borrowingId={request.id} token={token} otherName={name} />
+      {request.status === "COMPLETED" && (reviewSent || !alreadyReviewed) && (
+        <div className="review-form">
+          <ReviewForm borrowingId={request.id} token={token} otherName={name} onSubmitted={handleReviewSent} />
+        </div>
       )}
 
       {counterpart && (

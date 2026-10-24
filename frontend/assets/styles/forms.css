@@ -18,7 +18,7 @@
   width: 100%;
   min-height: var(--control);
   padding: 0 var(--space-4);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
   color: var(--color-text);
@@ -39,7 +39,7 @@
 .field select {
   appearance: none;
   padding-right: 44px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234b5563' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right var(--space-4) center;
   background-size: 20px;
@@ -78,7 +78,7 @@
 }
 
 .input-suffix input {
-  padding-right: 110px;
+  padding-right: 72px;
 }
 
 .input-suffix span {
@@ -162,7 +162,7 @@
   height: 28px;
   margin: 0;
   border-radius: 14px;
-  background: var(--color-border);
+  background: var(--color-border-strong);
   cursor: pointer;
   transition: background 0.15s;
 }
@@ -232,4 +232,51 @@
 .field-row .field input {
   width: 100%;
   min-width: 0;
+}
+
+/* Omdömesformuläret på en avslutad förfrågan (components/reviews/ReviewForm.jsx) */
+.review-form form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.review-form fieldset {
+  display: flex;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.review-form legend {
+  margin-bottom: var(--space-2);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* Betygen 1–5 som runda val, lika breda så att alla ryms på en rad */
+.review-form fieldset label {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-height: var(--tap);
+  padding: 0 var(--space-1);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  cursor: pointer;
+}
+
+.review-form fieldset label:has(input:checked) {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.review-form fieldset input {
+  accent-color: var(--color-primary);
 }

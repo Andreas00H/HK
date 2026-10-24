@@ -1,5 +1,6 @@
 // Hem (Figma): "Annonser i" vald stad med klockan till höger, sökfält, kategorier och annonserna som kort.
-// Staden leder till Profil, där den byts. Klockan visas bara för inloggade.
+// Staden leder till Profil, där den byts. Kartnål men ingen pil, eftersom det är en länk och inte en rullista
+// (UI.UX.md, beslut 2026-10-22). Klockan visas bara för inloggade.
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import SearchBar from "../components/items/SearchBar.jsx";
@@ -40,7 +41,6 @@ export default function Home() {
             <Icon name="pin" />
             {city}
             <span className="visually-hidden">, byt stad</span>
-            <Icon name="chevron-down" size={22} />
           </Link>
         </h1>
         {token && <RequestsBell />}

@@ -1,5 +1,5 @@
-// Annonskort (Figma): bild, rubrik, dygnspris och stad. Hela kortet är en länk till annonsen.
-// Saknas bilden, eller går den inte att visa, syns en kamera på grå botten.
+// Annonskort (Figma): bild, rubrik, dygnspris och stadsdel (eller stad om stadsdel saknas), och "Ledig".
+// Hela kortet är en länk till annonsen. Saknas bilden, eller går den inte att visa, syns en kamera på grå botten.
 // Hem visar bara lediga annonser. "Inte tillgänglig" syns bara för ägaren under Mina annonser.
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -23,9 +23,13 @@ export default function ItemCard({ item }) {
         <p className="item-card-price">{formatPrice(item.lending_price)}</p>
         <p className="item-card-location">
           <Icon name="pin" size={16} />
-          {item.location}
+          {item.area || item.location}
         </p>
-        {!item.available && <span className="badge badge-returned">Inte tillgänglig</span>}
+        {item.available ? (
+          <span className="badge badge-available">Ledig</span>
+        ) : (
+          <span className="badge badge-returned">Inte tillgänglig</span>
+        )}
       </div>
     </Link>
   );

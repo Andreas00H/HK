@@ -124,7 +124,11 @@ export default function ItemDetails() {
       <div className="details-head">
         <div className="details-title-row">
           <h1 className="details-title">{item.name}</h1>
-          {!item.available && <span className="badge badge-returned">Inte tillgänglig</span>}
+          {item.available ? (
+            <span className="badge badge-available">Ledig</span>
+          ) : (
+            <span className="badge badge-returned">Inte tillgänglig</span>
+          )}
         </div>
         <div className="details-price-row">
           <p className="details-price">

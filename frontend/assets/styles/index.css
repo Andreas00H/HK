@@ -1,5 +1,6 @@
 /* Gemensamma grundstilar och komponenter. Färger, typsnitt och mått kommer från Figma-designen
-   (Uthyrningsapp – startunderlag). Skriv aldrig hårdkodade färger i andra CSS-filer – använd var(--...). */
+   (Uthyrningsapp – startunderlag), med dämpad text, fältramar och röd text justerade för WCAG AA.
+   Skriv aldrig hårdkodade färger i andra CSS-filer – använd var(--...). */
 
 /* Inter ligger i projektet (SIL Open Font License, se assets/fonts/OFL.txt). Latin räcker för svenska. */
 @font-face {
@@ -18,15 +19,16 @@
   --color-bg: #f3f4f6;
   --color-surface: #ffffff;
   --color-text: #111827;
-  --color-text-muted: #6b7280;
-  --color-border: #e5e7eb;
+  --color-text-muted: #4b5563; /* 6,9:1 mot grå bakgrund (Figmas #6b7280 klarar bara 4,4:1) */
+  --color-border: #e5e7eb; /* kort och avdelare */
+  --color-border-strong: #868c97; /* fält: minst 3:1 mot både vit och grå bakgrund (WCAG 1.4.11) */
   --color-placeholder: #e5e7eb; /* tom bildruta */
   --color-star: #f2a93b;
   --color-success: #15803d;
   --color-success-light: #dcfce7;
   --color-warning: #b45309;
   --color-warning-light: #fef3c7;
-  --color-danger: #c8413b;
+  --color-danger: #b91c1c; /* 5,6:1 på den ljusröda Neka-knappen (Figmas #c8413b klarar bara 4,2:1) */
   --color-danger-light: #fbeae9;
 
   /* Typsnitt */
@@ -342,6 +344,7 @@ textarea {
 .badge-borrowed { background: var(--color-primary); color: #fff; }
 .badge-returned { background: var(--color-bg); color: var(--color-text-muted); }
 .badge-completed { background: var(--color-success-light); color: var(--color-success); }
+.badge-available { background: var(--color-primary-light); color: var(--color-primary); }
 
 /* Rund ruta med initialer */
 .avatar {
