@@ -42,6 +42,12 @@ psql -d hk -f db/seed.sql
 
 `schema.sql` raderar och skapar om alla tabeller, så all data försvinner om du kör den igen.
 
+Har du redan en databas från innan handpenning och stadsdel fanns? Kör migreringen i stället, den behåller all data:
+
+```bash
+psql -d hk -f db/migrations/001_deposit_area.sql
+```
+
 ### 2. Backend
 
 ```bash

@@ -10,6 +10,7 @@ import { countDays, formatPeriod } from "../components/borrow/dates.js";
 import { formatPrice } from "../components/items/formatPrice.js";
 import { formatRating } from "../components/reviews/formatRating.js";
 import ReviewList from "../components/reviews/ReviewList.jsx";
+import ReviewForm from "../components/reviews/ReviewForm.jsx";
 import Stars from "../components/reviews/Stars.jsx";
 import Icon from "../components/common/Icon.jsx";
 import TopBar from "../components/common/TopBar.jsx";
@@ -189,6 +190,11 @@ export default function BorrowingDetails() {
           <p>{nextStepText(request.status, isOwner)}</p>
           {CONTACT_STATUSES.includes(request.status) && <Link to="/contacts">Visa kontaktuppgifter</Link>}
         </div>
+      )}
+
+      {/* Omdöme kan bara lämnas när lånet är avslutat (Projektplan 8.7). Båda parter får lämna ett. */}
+      {request.status === "COMPLETED" && (
+        <ReviewForm borrowingId={request.id} token={token} otherName={name} />
       )}
 
       {counterpart && (

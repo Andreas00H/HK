@@ -126,12 +126,19 @@ export default function ItemDetails() {
           <h1 className="details-title">{item.name}</h1>
           {!item.available && <span className="badge badge-returned">Inte tillgänglig</span>}
         </div>
-        <p className="details-price">
-          <strong>{Number(item.lending_price).toLocaleString("sv-SE")} kr</strong> per dag
-        </p>
+        <div className="details-price-row">
+          <p className="details-price">
+            <strong>{Number(item.lending_price).toLocaleString("sv-SE")} kr</strong> per dag
+          </p>
+          {/* Handpenning visas bara om ägaren har fyllt i den (UI.UX.md, Annonsdetaljer) */}
+          {item.deposit > 0 && (
+            <p className="muted details-deposit">Handpenning {Number(item.deposit).toLocaleString("sv-SE")} kr</p>
+          )}
+        </div>
+        {/* Stadsdel före staden, som i Figma: "Vasastan, Stockholm" */}
         <p className="details-location">
           <Icon name="pin" size={18} />
-          {item.location}
+          {item.area ? `${item.area}, ${item.location}` : item.location}
         </p>
       </div>
 

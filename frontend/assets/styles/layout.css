@@ -149,3 +149,12 @@
     padding-bottom: var(--space-6);
   }
 }
+
+.header-city-icon {
+  color: var(--color-primary);
+  flex: none;
+}
+
+.header-city:hover {
+  border-color: var(--color-primary);
+}

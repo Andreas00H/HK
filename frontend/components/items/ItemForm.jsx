@@ -1,8 +1,8 @@
 // Formulär för att skapa och redigera annons (Figma: Ny annons). Används av AddItem och EditItem.
 // Fälten kontrolleras innan något skickas. onSubmit får fälten i det format backend vill ha och ska kasta fel
 // om det inte gick att spara, då visas backendens meddelande ovanför knappen.
-// Backend har en bild per annons (image_url), så fotot är en länk. Stad och Tillgänglig finns inte i designen
-// men krävs av backend och projektplanen, så de ligger sist.
+// Backend har en bild per annons (image_url), så fotot är en länk. Handpenning, stad, stadsdel och Tillgänglig
+// finns inte i designen men i backend och UI.UX.md, så de ligger efter designens fält.
 import { useEffect, useState } from "react";
 import Input from "../common/Input.jsx";
 import Icon from "../common/Icon.jsx";
@@ -34,6 +34,12 @@ function validate(values) {
   const price = Number(values.lending_price);
   if (values.lending_price === "" || !Number.isFinite(price) || price < 0 || price > MAX_PRICE) {
     errors.lending_price = "Fyll i ett pris mellan 0 och 100 000 kr.";
+  }
+  if (values.deposit !== "") {
+    const deposit = Number(values.deposit);
+    if (!Number.isFinite(deposit) || deposit < 0 || deposit > MAX_PRICE) {
+      errors.deposit = "Fyll i en handpenning mellan 0 och 100 000 kr, eller lämna tomt.";
+    }
   }
   if (!values.condition) errors.condition = "Välj skick.";
   if (!values.location.trim()) errors.location = "Fyll i stad.";
@@ -86,7 +92,10 @@ export default function ItemForm({ initialValues, submitLabel, sendingLabel, onS
         category_id: Number(values.category_id),
         condition: values.condition,
         lending_price: Number(values.lending_price),
+        // Frivilliga fält: tomt skickas som null så att ett tidigare värde tas bort vid redigering
+        deposit: values.deposit === "" ? null : Number(values.deposit),
         location: values.location.trim(),
+        area: values.area.trim() || null,
         description: values.description.trim(),
         available: values.available,
       });
@@ -169,23 +178,44 @@ export default function ItemForm({ initialValues, submitLabel, sendingLabel, onS
         maxLength={2000}
       />
 
-      <Input
-        id="lending_price"
-        label={
-          <>
-            Pris per dag<span className="visually-hidden"> i kronor</span>
-          </>
-        }
-        type="number"
-        inputMode="numeric"
-        min="0"
-        max={MAX_PRICE}
-        placeholder="0"
-        suffix="kr per dag"
-        value={values.lending_price}
-        onChange={update("lending_price")}
-        error={errors.lending_price}
-      />
+      {/* Pris och handpenning bredvid varandra (UI.UX.md, Lägg upp). Handpenningen betalas utanför appen. */}
+      <div className="field-row">
+        <Input
+          id="lending_price"
+          label={
+            <>
+              Pris per dag<span className="visually-hidden"> i kronor</span>
+            </>
+          }
+          type="number"
+          inputMode="numeric"
+          min="0"
+          max={MAX_PRICE}
+          placeholder="0"
+          suffix="kr/dag"
+          value={values.lending_price}
+          onChange={update("lending_price")}
+          error={errors.lending_price}
+        />
+        <Input
+          id="deposit"
+          label={
+            <>
+              Handpenning<span className="visually-hidden"> i kronor</span>
+            </>
+          }
+          type="number"
+          inputMode="numeric"
+          min="0"
+          max={MAX_PRICE}
+          placeholder="0"
+          suffix="kr"
+          value={values.deposit}
+          onChange={update("deposit")}
+          error={errors.deposit}
+          hint="Frivilligt. Betalas utanför appen."
+        />
+      </div>
 
       <Input
         as="select"
@@ -203,15 +233,28 @@ export default function ItemForm({ initialValues, submitLabel, sendingLabel, onS
         ))}
       </Input>
 
-      <Input
-        id="location"
-        label="Stad"
-        autoComplete="address-level2"
-        value={values.location}
-        onChange={update("location")}
-        error={errors.location}
-        maxLength={100}
-      />
+      {/* Stad och stadsdel bredvid varandra. Annonser filtreras bara på stad. */}
+      <div className="field-row">
+        <Input
+          id="location"
+          label="Stad"
+          autoComplete="address-level2"
+          value={values.location}
+          onChange={update("location")}
+          error={errors.location}
+          maxLength={100}
+        />
+        <Input
+          id="area"
+          label="Stadsdel"
+          placeholder="t.ex. Södermalm"
+          value={values.area}
+          onChange={update("area")}
+          error={errors.area}
+          hint="Frivilligt."
+          maxLength={100}
+        />
+      </div>
 
       <label className="switch-field">
         <span>

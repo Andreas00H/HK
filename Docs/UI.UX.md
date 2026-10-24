@@ -44,12 +44,12 @@ Fast längst ned på skärmen i mobil. Alltid 4 val, alltid i samma ordning:
 
 ```
 +-----------------------------------+
-| HK                    Stockholm v |
+| HK                      Stockholm |
 +-----------------------------------+
 ```
 
 - Vänster: logotyp/text **HK**, som länkar till Hem.
-- Höger: vald stad. Klick leder till Profil, där man byter stad.
+- Höger: vald stad med en liten kartnål framför. Klick leder till Profil, där man byter stad. Ingen pil ▾, eftersom det är en länk och inte en rullista.
 - På undersidor (annons, förfrågan, redigera) finns en **← Tillbaka**-länk till vänster i stället för logotypen.
 
 ### 2.3 Hur man når sidor utanför bottenmenyn
@@ -79,7 +79,7 @@ Båda:   Kontakter (telefon + e-post syns efter Godkänd)
 ### Hem `/`
 ```
 +-----------------------------------+
-| HK                    Stockholm v |
+| HK                      Stockholm |
 +-----------------------------------+
 | [ Sök t.ex. borrmaskin         ]  |
 | (Alla) (Verktyg) (Elektronik) ->  |  <- kategorier, scrollar i sidled
@@ -227,6 +227,7 @@ Klasserna finns färdiga i `frontend/assets/styles/index.css` (`.badge .badge-re
 | Får gäster se annonser? | Ja. Låneförfrågan, Lägg upp, Kontakter och Profil kräver inloggning | 2026-10-13 |
 | Standardstad för gäster | Stockholm | 2026-10-13 |
 | Handpenning och stadsdel | Ja, två **frivilliga** fält i `items`. Handpenningen betalas utanför appen, precis som hyran (godkänt av Ernest) | 2026-10-13 |
+| Stadsknappen i sidhuvudet | Kartnål i stället för ▾. Pilen fick knappen att se ut som en rullista, men den leder till Profil (hittat vid test) | 2026-10-22 |
 | Statusbadges | Ljus bakgrund + färgad text, Utlånad fylld (från mockupsen) | 2026-10-13 |
 | Allt i designen måste finnas i databasen | AI-förslag som BankID, "svarar inom 1 timme" och favoriter togs bort ur mockupsen | 2026-09-30 |
 

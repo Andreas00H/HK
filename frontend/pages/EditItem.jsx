@@ -120,7 +120,9 @@ export default function EditItem() {
           category_id: String(item.category_id),
           condition: item.condition,
           lending_price: String(item.lending_price),
+          deposit: item.deposit == null ? "" : String(item.deposit),
           location: item.location,
+          area: item.area || "",
           description: item.description,
           available: item.available,
         }}

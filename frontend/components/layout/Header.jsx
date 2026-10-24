@@ -28,8 +28,11 @@ export default function Header() {
           ))}
         </nav>
 
+        {/* Länk till Profil där man byter stad. Kartnål i stället för ▾, eftersom en pil
+            får det att se ut som en rullista som öppnas här (UI.UX.md, beslut 2026-10-22). */}
         <Link to="/profile" className="header-city" aria-label={"Vald stad: " + city + ". Byt stad på Profil"}>
-          {city} <Icon name="chevron-down" size={18} />
+<Icon name="pin" size={16} className="header-city-icon" />
+          {city}
         </Link>
       </div>
     </header>
