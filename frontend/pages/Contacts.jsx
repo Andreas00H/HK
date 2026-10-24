@@ -2,7 +2,7 @@
 // från GET /api/contacts. Ingen chatt, parterna hör av sig till varandra själva.
 // Pågående (Godkänd, Utlånad) visas först, sedan Återlämnad och Avslutad.
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import ContactCard from "../components/contacts/ContactCard.jsx";
 import { getContacts } from "../services/contactService.js";
 import { useAuth } from "../hooks/useAuth.js";
@@ -14,6 +14,9 @@ const GROUP = { ACCEPTED: 0, BORROWED: 0, RETURNED: 1, COMPLETED: 1 };
 
 export default function Contacts() {
   const { token } = useAuth();
+  // Ny key varje gång man trycker på Kontakter i menyn, även när man redan är här. Då hämtas listan på nytt,
+  // t.ex. när man väntar på att en förfrågan ska bli godkänd.
+  const { key: visit } = useLocation();
   const [contacts, setContacts] = useState(null);
   const [error, setError] = useState(null);
   const [attempt, setAttempt] = useState(0); // ökas av "Försök igen" så att listan hämtas på nytt
@@ -34,7 +37,7 @@ export default function Contacts() {
     return () => {
       cancelled = true;
     };
-  }, [token, attempt]);
+  }, [token, attempt, visit]);
 
   // Backend skickar nyast först. sort behåller den ordningen inom varje grupp.
   const sorted = contacts && [...contacts].sort((a, b) => (GROUP[a.status] ?? 2) - (GROUP[b.status] ?? 2));
