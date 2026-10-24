@@ -42,9 +42,11 @@ CREATE TABLE items (
   category_id   INTEGER       NOT NULL REFERENCES categories(id),
   name          VARCHAR(150)  NOT NULL,
   lending_price NUMERIC(10,2) NOT NULL CHECK (lending_price >= 0),
+  deposit       NUMERIC(10,2)          CHECK (deposit >= 0),   -- handpenning, frivillig (betalas utanför appen)
   description   TEXT          NOT NULL,
   condition     VARCHAR(50)   NOT NULL,
   location      VARCHAR(100)  NOT NULL,
+  area          VARCHAR(100),                                  -- stadsdel, frivillig (filtrering sker bara på stad)
   image_url     TEXT,
   available     BOOLEAN       NOT NULL DEFAULT TRUE,
   created_at    TIMESTAMPTZ   NOT NULL DEFAULT NOW()

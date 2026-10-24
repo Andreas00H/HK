@@ -62,6 +62,30 @@ function validateItemFields(body, requireAll) {
     clean.lending_price = price;
   }
 
+  // Handpenning är frivillig: tomt eller null betyder ingen handpenning, annars ett tal mellan 0 och 100000
+  if (body.deposit !== undefined) {
+    if (body.deposit === null || body.deposit === "") {
+      clean.deposit = null;
+    } else {
+      const deposit = Number(body.deposit);
+      if (!Number.isFinite(deposit) || deposit < 0 || deposit > 100000) {
+        throw httpError(400, "Ogiltig handpenning");
+      }
+      clean.deposit = deposit;
+    }
+  }
+
+  // Stadsdel är frivillig: tom text eller null betyder ingen stadsdel
+  if (body.area !== undefined) {
+    if (body.area === null || (typeof body.area === "string" && body.area.trim() === "")) {
+      clean.area = null;
+    } else if (typeof body.area !== "string" || body.area.trim().length > 100) {
+      throw httpError(400, "Fältet \"area\" får vara max 100 tecken");
+    } else {
+      clean.area = body.area.trim();
+    }
+  }
+
   // available får bara ändras vid redigering och måste vara true eller false
   if (body.available !== undefined) {
     if (typeof body.available !== "boolean") {
@@ -100,9 +124,11 @@ async function createItem(userId, body) {
       categoryId: fields.category_id,
       name: fields.name,
       lendingPrice: fields.lending_price,
+      deposit: fields.deposit ?? null,
       description: fields.description,
       condition: fields.condition,
       location: fields.location,
+      area: fields.area ?? null,
       imageUrl: fields.image_url,
     });
   } catch (err) {

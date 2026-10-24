@@ -43,7 +43,9 @@ export default function AddItem() {
           category_id: "",
           condition: "",
           lending_price: "",
+          deposit: "",
           location: city,
+          area: "",
           description: "",
           available: true,
         }}

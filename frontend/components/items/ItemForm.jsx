@@ -32,6 +32,12 @@ function validate(values) {
   if (values.lending_price === "" || !Number.isFinite(price) || price < 0 || price > MAX_PRICE) {
     errors.lending_price = "Fyll i ett pris mellan 0 och 100 000 kr.";
   }
+  if (values.deposit !== "") {
+    const deposit = Number(values.deposit);
+    if (!Number.isFinite(deposit) || deposit < 0 || deposit > MAX_PRICE) {
+      errors.deposit = "Fyll i en handpenning mellan 0 och 100 000 kr, eller lämna tomt.";
+    }
+  }
   if (!values.location.trim()) errors.location = "Fyll i stad.";
   if (!values.description.trim()) errors.description = "Skriv en beskrivning.";
   return errors;
@@ -82,7 +88,10 @@ export default function ItemForm({ initialValues, submitLabel, sendingLabel, onS
         category_id: Number(values.category_id),
         condition: values.condition,
         lending_price: Number(values.lending_price),
+        // Frivilliga fält: tomt skickas som null så att ett tidigare värde tas bort vid redigering
+        deposit: values.deposit === "" ? null : Number(values.deposit),
         location: values.location.trim(),
+        area: values.area.trim() || null,
         description: values.description.trim(),
         available: values.available,
       });
@@ -145,27 +154,55 @@ export default function ItemForm({ initialValues, submitLabel, sendingLabel, onS
         ))}
       </Input>
 
-      <Input
-        id="lending_price"
-        label="Pris per dag (kr)"
-        type="number"
-        inputMode="numeric"
-        min="0"
-        max={MAX_PRICE}
-        value={values.lending_price}
-        onChange={update("lending_price")}
-        error={errors.lending_price}
-      />
+      {/* Pris och handpenning bredvid varandra (UI.UX.md, Lägg upp) */}
+      <div className="field-row">
+        <Input
+          id="lending_price"
+          label="Pris per dag (kr)"
+          type="number"
+          inputMode="numeric"
+          min="0"
+          max={MAX_PRICE}
+          value={values.lending_price}
+          onChange={update("lending_price")}
+          error={errors.lending_price}
+        />
+        <Input
+          id="deposit"
+          label="Handpenning (kr)"
+          type="number"
+          inputMode="numeric"
+          min="0"
+          max={MAX_PRICE}
+          placeholder="0"
+          value={values.deposit}
+          onChange={update("deposit")}
+          error={errors.deposit}
+          hint="Frivilligt. Betalas utanför appen."
+        />
+      </div>
 
-      <Input
-        id="location"
-        label="Stad"
-        autoComplete="address-level2"
-        value={values.location}
-        onChange={update("location")}
-        error={errors.location}
-        maxLength={100}
-      />
+      {/* Stad och stadsdel bredvid varandra. Annonser filtreras bara på stad. */}
+      <div className="field-row">
+        <Input
+          id="location"
+          label="Stad"
+          autoComplete="address-level2"
+          value={values.location}
+          onChange={update("location")}
+          error={errors.location}
+          maxLength={100}
+        />
+        <Input
+          id="area"
+          label="Stadsdel (frivilligt)"
+          placeholder="t.ex. Södermalm"
+          value={values.area}
+          onChange={update("area")}
+          error={errors.area}
+          maxLength={100}
+        />
+      </div>
 
       <Input
         as="textarea"
