@@ -9,6 +9,7 @@ import { countDays, formatPeriod } from "../components/borrow/dates.js";
 import { formatPrice } from "../components/items/formatPrice.js";
 import { formatRating } from "../components/reviews/formatRating.js";
 import ReviewList from "../components/reviews/ReviewList.jsx";
+import ReviewForm from "../components/reviews/ReviewForm.jsx";
 import { getMyBorrowRequests, updateBorrowRequestStatus } from "../services/borrowRequestService.js";
 import { getUser } from "../services/userService.js";
 import { useAuth } from "../hooks/useAuth.js";
@@ -122,6 +123,7 @@ export default function BorrowingDetails() {
   const isOwner = request.owner_id === userId;
   const actions = isOwner ? OWNER_ACTIONS[request.status] || [] : [];
   const days = countDays(request.start_date, request.end_date);
+  const otherName = isOwner ? request.borrower_name : request.owner_name;
 
   return (
     <article className="page request-details">
@@ -200,6 +202,11 @@ export default function BorrowingDetails() {
         <p>{nextStepText(request.status, isOwner)}</p>
         {CONTACT_STATUSES.includes(request.status) && <Link to="/contacts">Visa kontaktuppgifter</Link>}
       </div>
+
+      {/* Omdöme kan bara lämnas när lånet är avslutat (Projektplan 8.7). Båda parter får lämna ett. */}
+      {request.status === "COMPLETED" && (
+        <ReviewForm borrowingId={request.id} token={token} otherName={otherName} />
+      )}
 
       {actions.length > 0 && (
         <div className="request-actions">
