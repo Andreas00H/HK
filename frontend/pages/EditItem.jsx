@@ -1,13 +1,13 @@
-// Redigera egen annons (UI.UX.md, Lägg upp / Redigera). PUT /api/items/:id sparar och DELETE tar bort annonsen.
+// Redigera egen annons, med samma formulär som Ny annons (Figma). PUT /api/items/:id sparar och DELETE tar bort annonsen.
 // Bara ägaren får ändra. Andra ser ett meddelande i stället för formuläret, och svarar backend ändå 403
 // visas dess felmeddelande.
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import ItemForm from "../components/items/ItemForm.jsx";
+import TopBar from "../components/common/TopBar.jsx";
 import { deleteItem, getItem, updateItem } from "../services/itemService.js";
 import { useAuth } from "../hooks/useAuth.js";
 import "../assets/styles/forms.css";
-import "../assets/styles/items.css";
 
 export default function EditItem() {
   const { id } = useParams();
@@ -67,13 +67,7 @@ export default function EditItem() {
     }
   }
 
-  const topBar = (
-    <div className="details-topbar">
-      <button type="button" className="back-link" onClick={goBack}>
-        ← Tillbaka
-      </button>
-    </div>
-  );
+  const topBar = <TopBar title="Redigera annons" variant="close" onBack={goBack} />;
 
   if (error) {
     return (
@@ -111,7 +105,6 @@ export default function EditItem() {
   return (
     <section className="page form-page">
       {topBar}
-      <h1 className="page-title">Redigera annons</h1>
 
       {notice && (
         <div className="message" role="status">

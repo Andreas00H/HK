@@ -1,31 +1,49 @@
-/* Formulär: login, register, annons, förfrågan (UI.UX.md: Logga in / Registrera). */
+/* Formulär: Ny annons, Redigera, Logga in, Registrera och stadsval (Figma: Ny annons). */
 
 /* Fält med etikett ovanför och fel- eller hjälptext under (components/common/Input.jsx) */
 .field {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-2);
 }
 
 .field label {
-  font-size: var(--text-sm);
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 500;
 }
 
 .field input,
 .field select,
 .field textarea {
-  min-height: var(--tap);
-  padding: 0 var(--space-3);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
+  width: 100%;
+  min-height: var(--control);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
   background: var(--color-surface);
   color: var(--color-text);
 }
 
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
 .field textarea {
-  padding: var(--space-3);
+  min-height: 104px;
+  padding: var(--space-3) var(--space-4);
   resize: vertical;
+}
+
+/* Rullista med egen pil till höger */
+.field select {
+  appearance: none;
+  padding-right: 44px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234b5563' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-4) center;
+  background-size: 20px;
+  cursor: pointer;
 }
 
 .field input:focus,
@@ -41,28 +59,8 @@
   border-color: var(--color-danger);
 }
 
-/* Kryssruta med texten bredvid, t.ex. Tillgänglig för utlåning */
-.field .checkbox-field {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  min-height: var(--tap);
-  font-size: var(--text-md);
-  cursor: pointer;
-}
-
-.field .checkbox-field input {
-  width: 20px;
-  min-height: 20px;
-  height: 20px;
-  margin: 0;
-  padding: 0;
-  accent-color: var(--color-primary);
-}
-
 .field-error,
 .field-hint {
-  margin: 0;
   font-size: var(--text-sm);
 }
 
@@ -74,20 +72,135 @@
   color: var(--color-text-muted);
 }
 
+/* Text inne i fältet till höger, t.ex. "kr per dag" */
+.input-suffix {
+  position: relative;
+}
+
+.input-suffix input {
+  padding-right: 72px;
+}
+
+.input-suffix span {
+  position: absolute;
+  right: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+/* Ny annons / Redigera: en kolumn, lika bred som annonssidan */
+.form-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.item-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* Fotoruta: streckad blå "Lägg till" eller bilden från länken */
+.photo-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  width: 96px;
+  height: 96px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-placeholder);
+  cursor: pointer;
+}
+
+.photo-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-add {
+  border: 1.5px dashed var(--color-primary);
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+/* Tillgänglig för utlåning: text till vänster och ett reglage till höger */
+.switch-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+  cursor: pointer;
+}
+
+.switch-field > span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.switch-label {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.switch {
+  flex: none;
+  appearance: none;
+  position: relative;
+  width: 48px;
+  height: 28px;
+  margin: 0;
+  border-radius: 14px;
+  background: var(--color-border-strong);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.switch::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  transition: transform 0.15s;
+}
+
+.switch:checked {
+  background: var(--color-primary);
+}
+
+.switch:checked::after {
+  transform: translateX(20px);
+}
+
 /* Logga in / Registrera: centrerat, max 400 px brett, logotyp ovanför */
 .auth-page {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-4);
   max-width: 400px;
   margin: 0 auto;
 }
 
 .auth-logo {
   align-self: center;
-  margin-top: var(--space-4);
+  margin-top: var(--space-6);
   font-size: var(--text-xl);
-  font-weight: 800;
+  font-weight: 700;
   color: var(--color-primary);
   text-decoration: none;
 }
@@ -97,44 +210,13 @@
   text-align: center;
 }
 
-.auth-form,
-.item-form {
+.auth-form {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
 }
 
-/* Lägg upp / Redigera annons: en kolumn, lika bred som annonsdetaljer */
-.form-page {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  max-width: 640px;
-  margin: 0 auto;
-}
-
-.form-page .page-title {
-  margin: 0;
-}
-
-/* Förhandsvisning av bilden från bild-länken */
-.image-preview {
-  width: 160px;
-  aspect-ratio: 1 / 1;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  background: var(--color-bg);
-}
-
-.image-preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 .auth-switch {
-  margin: 0;
   text-align: center;
 }
 
@@ -150,4 +232,51 @@
 .field-row .field input {
   width: 100%;
   min-width: 0;
+}
+
+/* Omdömesformuläret på en avslutad förfrågan (components/reviews/ReviewForm.jsx) */
+.review-form form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.review-form fieldset {
+  display: flex;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.review-form legend {
+  margin-bottom: var(--space-2);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* Betygen 1–5 som runda val, lika breda så att alla ryms på en rad */
+.review-form fieldset label {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-height: var(--tap);
+  padding: 0 var(--space-1);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  cursor: pointer;
+}
+
+.review-form fieldset label:has(input:checked) {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.review-form fieldset input {
+  accent-color: var(--color-primary);
 }

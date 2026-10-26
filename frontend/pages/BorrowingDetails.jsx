@@ -1,5 +1,6 @@
-// En låneförfrågan: sak, period, parter och status (UI.UX.md, Förfrågan). Ägaren får knappar för de statusbyten
-// som är tillåtna just nu (PUT /api/borrow-requests/:id, Projektplan 8.5–8.6). Lånaren ser status men byter den inte i v1.
+// En låneförfrågan (Figma: Ny förfrågan): saken, motparten med betyg, period och pris, motpartens omdömen
+// och knapparna längst ned. Ägaren får bara knappar för de statusbyten som är tillåtna just nu
+// (PUT /api/borrow-requests/:id, Projektplan 8.5–8.6). Lånaren ser status men byter den inte i v1.
 // Backend har ingen GET för en enskild förfrågan, så den hämtas ur mina förfrågningar (GET /api/borrow-requests/my).
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -10,12 +11,28 @@ import { formatPrice } from "../components/items/formatPrice.js";
 import { formatRating } from "../components/reviews/formatRating.js";
 import ReviewList from "../components/reviews/ReviewList.jsx";
 import ReviewForm from "../components/reviews/ReviewForm.jsx";
+import Stars from "../components/reviews/Stars.jsx";
+import Icon from "../components/common/Icon.jsx";
+import TopBar from "../components/common/TopBar.jsx";
+import ActionBar from "../components/common/ActionBar.jsx";
+import { initials } from "../components/common/initials.js";
+import { formatMonthYear } from "../components/common/formatDate.js";
 import { getMyBorrowRequests, updateBorrowRequestStatus } from "../services/borrowRequestService.js";
 import { getUser } from "../services/userService.js";
 import { useAuth } from "../hooks/useAuth.js";
 import "../assets/styles/items.css";
+import "../assets/styles/forms.css";
 import "../assets/styles/dashboard.css";
 import "../assets/styles/profile.css";
+
+// Antal omdömen som visas innan man trycker "Visa alla"
+const LATEST_REVIEWS = 3;
+
+// "Eriks omdömen", men "Hans omdömen" när förnamnet redan slutar på s, x eller z
+function reviewsHeading(name) {
+  const firstName = name.split(" ")[0];
+  return `${/[sxz]$/i.test(firstName) ? firstName : `${firstName}s`} omdömen`;
+}
 
 export default function BorrowingDetails() {
   const { id } = useParams();
@@ -24,8 +41,9 @@ export default function BorrowingDetails() {
   const userId = user.id;
 
   const [request, setRequest] = useState(null);
-  const [borrower, setBorrower] = useState(null); // lånarens publika profil med omdömen, hämtas bara för ägaren
-  const [showReviews, setShowReviews] = useState(false);
+  const [counterpart, setCounterpart] = useState(null); // motpartens publika profil med omdömen
+  const [showAllReviews, setShowAllReviews] = useState(false);
+  const [reviewSent, setReviewSent] = useState(false); // omdöme skickat nu, så att tacket ligger kvar
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(null); // status som håller på att sparas
   const [actionError, setActionError] = useState(null);
@@ -33,8 +51,9 @@ export default function BorrowingDetails() {
   useEffect(() => {
     let cancelled = false;
     setRequest(null);
-    setBorrower(null);
-    setShowReviews(false);
+    setCounterpart(null);
+    setShowAllReviews(false);
+    setReviewSent(false);
     setError(null);
     setActionError(null);
 
@@ -47,14 +66,14 @@ export default function BorrowingDetails() {
           return;
         }
         setRequest(found);
-        // Ägaren ska kunna se lånarens omdömen innan beslut (Projektplan 8.4). Går det fel visas bara namnet.
-        if (found.owner_id === userId) {
-          return getUser(found.borrower_id)
-            .then((profile) => {
-              if (!cancelled) setBorrower(profile);
-            })
-            .catch(() => {});
-        }
+        // Ägaren ska kunna se lånarens omdömen innan beslut (Projektplan 8.4), och lånaren ser ägarens.
+        // Går det fel visas bara namnet.
+        const counterpartId = found.owner_id === userId ? found.borrower_id : found.owner_id;
+        return getUser(counterpartId)
+          .then((profile) => {
+            if (!cancelled) setCounterpart(profile);
+          })
+          .catch(() => {});
       })
       .catch((err) => {
         if (!cancelled) setError(`Kunde inte hämta förfrågan. ${err.message}`);
@@ -92,141 +111,149 @@ export default function BorrowingDetails() {
     }
   }
 
-  const topBar = (
-    <div className="details-topbar">
-      <button type="button" className="back-link" onClick={handleBack}>
-        ← Tillbaka
-      </button>
-    </div>
-  );
-
-  if (error) {
+  if (error || !request) {
     return (
       <section className="page request-details">
-        {topBar}
-        <p className="message message-error" role="alert">
-          {error}
-        </p>
-      </section>
-    );
-  }
-
-  if (!request) {
-    return (
-      <section className="page request-details">
-        {topBar}
-        <p className="muted">Hämtar förfrågan…</p>
+        <TopBar title="Förfrågan" onBack={handleBack} />
+        {error ? (
+          <p className="message message-error" role="alert">
+            {error}
+          </p>
+        ) : (
+          <p className="muted">Hämtar förfrågan…</p>
+        )}
       </section>
     );
   }
 
   const isOwner = request.owner_id === userId;
-  const actions = isOwner ? OWNER_ACTIONS[request.status] || [] : [];
+  const isNew = request.status === "REQUESTED";
+  const name = isOwner ? request.borrower_name : request.owner_name;
+  const heading = isOwner ? (isNew ? `${name} vill låna` : `Lånare: ${name}`) : `Uthyrare: ${name}`;
+  // Neka och Avböj till vänster, som i designen
+  const actions = isOwner ? [...(OWNER_ACTIONS[request.status] || [])].sort((a, b) => !!b.danger - !!a.danger) : [];
   const days = countDays(request.start_date, request.end_date);
-  const otherName = isOwner ? request.borrower_name : request.owner_name;
+  const reviews = counterpart?.reviews || [];
+  // Har jag redan lämnat omdöme om motparten för det här lånet visas inte formuläret igen
+  const alreadyReviewed = reviews.some((review) => review.borrowing_id === request.id && review.reviewer_id === userId);
+
+  // Efter ett nytt omdöme hämtas motpartens profil igen, så att omdömet syns i listan direkt
+  function handleReviewSent() {
+    setReviewSent(true);
+    getUser(isOwner ? request.borrower_id : request.owner_id)
+      .then(setCounterpart)
+      .catch(() => {});
+  }
 
   return (
-    <article className="page request-details">
-      {topBar}
+    <article className={"page request-details" + (actions.length > 0 ? " has-action-bar" : "")}>
+      <TopBar title={isOwner && isNew ? "Ny förfrågan" : "Förfrågan"} onBack={handleBack} />
 
-      <div className="card">
-        <div className="details-title-row">
-          <h1 className="page-title">{request.item_name}</h1>
-          <RequestStatus status={request.status} />
+      <Link to={`/items/${request.item_id}`} className="card request-item">
+        <span className="request-item-thumb" aria-hidden="true">
+          <Icon name="camera" size={20} />
+        </span>
+        <span className="request-item-text">
+          <span className="request-item-name">{request.item_name}</span>
+          <span className="muted">{formatPrice(request.lending_price)}</span>
+        </span>
+        <RequestStatus status={request.status} />
+      </Link>
+
+      <div className="card request-person">
+        <div className="person-card">
+          <span className="avatar" aria-hidden="true">
+            {initials(name)}
+          </span>
+          <div>
+            <p className="person-name">{heading}</p>
+            {counterpart && (
+              <p className="rating-line">
+                {counterpart.review_count > 0 && <Stars rating={counterpart.average_rating} />}
+                {formatRating(counterpart)}
+              </p>
+            )}
+          </div>
         </div>
-        <Link to={`/items/${request.item_id}`}>Visa annonsen</Link>
+        <dl className="info-rows request-rows">
+          <div>
+            <dt>{isNew ? "Önskad period" : "Period"}</dt>
+            <dd>{formatPeriod(request.start_date, request.end_date)}</dd>
+          </div>
+          <div>
+            <dt>Antal dagar</dt>
+            <dd>{days}</dd>
+          </div>
+          <div>
+            <dt>Totalt</dt>
+            <dd className="request-total">{(days * Number(request.lending_price)).toLocaleString("sv-SE")} kr</dd>
+          </div>
+          {counterpart?.created_at && (
+            <div>
+              <dt>Medlem sedan</dt>
+              <dd>{formatMonthYear(counterpart.created_at)}</dd>
+            </div>
+          )}
+        </dl>
       </div>
 
-      <dl className="card info-rows">
-        <div>
-          <dt>Period</dt>
-          <dd>{formatPeriod(request.start_date, request.end_date)}</dd>
-        </div>
-        <div>
-          <dt>Dygnspris</dt>
-          <dd>{formatPrice(request.lending_price)}</dd>
-        </div>
-        <div>
-          <dt>
-            Beräknad hyra ({days} {days === 1 ? "dag" : "dagar"})
-          </dt>
-          <dd>{(days * Number(request.lending_price)).toLocaleString("sv-SE")} kr</dd>
-        </div>
-        <div>
-          <dt>Ägare</dt>
-          <dd>
-            {request.owner_name}
-            {isOwner && " (du)"}
-          </dd>
-        </div>
-        <div>
-          <dt>Lånare</dt>
-          <dd>
-            {request.borrower_name}
-            {!isOwner && " (du)"}
-          </dd>
-        </div>
-        {isOwner && borrower && (
-          <div>
-            <dt>Lånarens omdömen</dt>
-            <dd>
-              {formatRating(borrower)}
-              {borrower.review_count > 0 && (
-                <>
-                  {" · "}
-                  <button
-                    type="button"
-                    className="link-button"
-                    aria-expanded={showReviews}
-                    aria-controls="borrower-reviews"
-                    onClick={() => setShowReviews(!showReviews)}
-                  >
-                    {showReviews ? "Dölj" : "Visa"}
-                  </button>
-                </>
-              )}
-            </dd>
-          </div>
-        )}
-      </dl>
-
-      {/* Ägaren läser lånarens omdömen innan beslut (Projektplan 8.4, UI.UX.md: Förfrågan) */}
-      {isOwner && borrower && showReviews && (
-        <div className="card" id="borrower-reviews">
-          <h2 className="section-title">Omdömen om {request.borrower_name}</h2>
-          <ReviewList reviews={borrower.reviews} />
+      {/* Ägaren med en ny förfrågan ser bara knapparna, alla andra får veta vad som händer härnäst */}
+      {!(isOwner && isNew) && (
+        <div className="info-box next-step">
+          <p>{nextStepText(request.status, isOwner)}</p>
+          {CONTACT_STATUSES.includes(request.status) && <Link to="/contacts">Visa kontaktuppgifter</Link>}
         </div>
       )}
 
-      <div className="card next-step">
-        <p>{nextStepText(request.status, isOwner)}</p>
-        {CONTACT_STATUSES.includes(request.status) && <Link to="/contacts">Visa kontaktuppgifter</Link>}
-      </div>
-
       {/* Omdöme kan bara lämnas när lånet är avslutat (Projektplan 8.7). Båda parter får lämna ett. */}
-      {request.status === "COMPLETED" && (
-        <ReviewForm borrowingId={request.id} token={token} otherName={otherName} />
+      {request.status === "COMPLETED" && (reviewSent || !alreadyReviewed) && (
+        <div className="review-form">
+          <ReviewForm borrowingId={request.id} token={token} otherName={name} onSubmitted={handleReviewSent} />
+        </div>
+      )}
+
+      {counterpart && (
+        <section className="request-reviews" aria-labelledby="counterpart-reviews">
+          <div className="section-head">
+            <h2 className="section-title" id="counterpart-reviews">
+              {reviewsHeading(name)}
+            </h2>
+            {reviews.length > LATEST_REVIEWS && (
+              <button type="button" className="link-button" onClick={() => setShowAllReviews(!showAllReviews)}>
+                {showAllReviews ? "Visa färre" : "Visa alla"}
+              </button>
+            )}
+          </div>
+          {reviews.length === 0 ? (
+            <p className="muted">Inga omdömen än.</p>
+          ) : (
+            <ReviewList reviews={showAllReviews ? reviews : reviews.slice(0, LATEST_REVIEWS)} variant="card" />
+          )}
+        </section>
       )}
 
       {actions.length > 0 && (
-        <div className="request-actions">
+        <ActionBar
+          message={
+            actionError && (
+              <p className="form-error" role="alert">
+                {actionError}
+              </p>
+            )
+          }
+        >
           {actions.map((action) => (
             <button
               key={action.status}
               type="button"
-              className={"btn btn-block " + (action.danger ? "btn-danger" : "btn-primary")}
+              className={"btn " + (action.danger ? "btn-danger-soft" : "btn-primary")}
               disabled={saving !== null}
               onClick={() => handleAction(action)}
             >
               {saving === action.status ? "Sparar…" : action.label}
             </button>
           ))}
-          {actionError && (
-            <p className="form-error" role="alert">
-              {actionError}
-            </p>
-          )}
-        </div>
+        </ActionBar>
       )}
     </article>
   );

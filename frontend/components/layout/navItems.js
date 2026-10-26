@@ -2,6 +2,6 @@
 export const NAV_ITEMS = [
   { to: "/", label: "Hem", icon: "home" },
   { to: "/add-item", label: "Lägg upp", icon: "plus" },
-  { to: "/contacts", label: "Kontakter", icon: "chat" },
+  { to: "/contacts", label: "Kontakter", icon: "users" },
   { to: "/profile", label: "Profil", icon: "user" },
 ];

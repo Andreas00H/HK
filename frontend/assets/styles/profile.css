@@ -1,44 +1,54 @@
-/* Profil, omdömen och stadsval (UI.UX.md: Profil, 8.1). */
+/* Profil, omdömen och stadsval (Figma: Profil, gruppens stil). */
 
 .profile {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-4);
   max-width: 640px;
   margin: 0 auto;
 }
 
-.profile .card p {
-  margin: 0;
+.profile .card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 
 /* Knappen till Översikt: text till vänster, röd siffra och pil till höger */
 .dashboard-link {
   justify-content: space-between;
+  min-height: 50px;
+  padding: 0 var(--space-4);
+  font-size: 17px;
+  font-weight: 500;
 }
 
 .dashboard-link > span:first-child {
   margin-right: auto;
+  text-align: left;
 }
 
 .count-badge {
-  min-width: 22px;
+  min-width: 24px;
+  height: 24px;
   padding: 0 var(--space-1);
-  border-radius: 11px;
+  border-radius: 12px;
   background: var(--color-danger);
   color: #fff;
   font-size: var(--text-sm);
-  line-height: 22px;
+  line-height: 24px;
   text-align: center;
 }
 
-/* Mina uppgifter: avatar och namn överst, sedan e-post och telefon */
-.profile .owner-box {
-  margin-bottom: var(--space-2);
+/* Mina uppgifter */
+.profile-person {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
 }
 
-.profile .info-rows div {
-  padding: var(--space-3) 0;
+.profile-info .info-rows dd {
+  font-weight: 500;
 }
 
 /* Stad: rullista och Spara bredvid varandra */
@@ -52,43 +62,73 @@
   flex: 1;
 }
 
-.profile .card .city-status {
-  margin-top: var(--space-2);
+.city-row .field label {
+  color: var(--color-text-muted);
+  font-weight: 400;
 }
 
-/* Omdömen */
-.profile .card .rating-summary {
-  margin-bottom: var(--space-2);
+/* Omdömen: stor stjärna, snittbetyg och antal */
+.rating-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.rating-summary strong {
+  font-size: var(--text-2xl);
   font-weight: 700;
+  line-height: 1;
+}
+
+.rating-summary .muted {
+  font-size: var(--text-md);
 }
 
 .review-list {
   list-style: none;
-  margin: 0 0 var(--space-2);
-  padding: 0;
-}
-
-.review-list li {
-  padding: var(--space-2) 0;
-  border-bottom: 1px solid var(--color-bg);
-}
-
-.review-list li:last-child {
-  border-bottom: none;
-}
-
-.review p {
   margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-.review-stars {
-  color: var(--color-warning);
-  letter-spacing: 1px;
+/* Profil: omdömen som rader med linje emellan */
+.review-list-row li {
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border);
 }
 
-.review .review-comment,
-.profile .card .review-comment {
-  margin-top: var(--space-1);
+.review-list-row li:first-child {
+  padding-top: 0;
+}
+
+.review-list-row li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.review-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.review-name {
+  font-weight: 500;
+}
+
+/* Förfrågan: omdömen som egna kort */
+.review-list-card {
+  gap: var(--space-4);
+}
+
+.review-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
 }
 
 /* Platshållare medan omdömena laddas */
@@ -98,15 +138,15 @@
   gap: var(--space-2);
 }
 
-/* Logga ut: grå textlänk centrerad längst ned */
+/* Logga ut: grå text centrerad längst ned */
 .logout-link {
   display: block;
   min-height: var(--tap);
-  margin: var(--space-4) auto 0;
-  padding: 0 var(--space-3);
+  margin: var(--space-2) auto 0;
+  padding: 0 var(--space-4);
   border: none;
   background: none;
   color: var(--color-text-muted);
-  text-decoration: underline;
+  font-size: var(--text-lg);
   cursor: pointer;
 }

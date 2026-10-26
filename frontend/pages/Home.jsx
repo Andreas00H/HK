@@ -1,16 +1,22 @@
-// Hem: alla annonser i vald stad, sökfält och kategorifilter överst (UI.UX.md, Hem).
+// Hem (Figma): "Annonser i" vald stad med klockan till höger, sökfält, kategorier och annonserna som kort.
+// Staden leder till Profil, där den byts. Kartnål men ingen pil, eftersom det är en länk och inte en rullista
+// (UI.UX.md, beslut 2026-10-22). Klockan visas bara för inloggade.
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import SearchBar from "../components/items/SearchBar.jsx";
 import CategoryFilter from "../components/items/CategoryFilter.jsx";
 import ItemList from "../components/items/ItemList.jsx";
+import RequestsBell from "../components/borrow/RequestsBell.jsx";
+import Icon from "../components/common/Icon.jsx";
 import { getCategories } from "../services/categoryService.js";
 import { useItems } from "../hooks/useItems.js";
 import { useCity } from "../hooks/useCity.js";
+import { useAuth } from "../hooks/useAuth.js";
 import "../assets/styles/items.css";
 
 export default function Home() {
   const { city } = useCity();
+  const { token } = useAuth();
   const [search, setSearch] = useState("");
   const [categoryId, setCategoryId] = useState(null);
   const [categories, setCategories] = useState([]);
@@ -28,7 +34,17 @@ export default function Home() {
 
   return (
     <section className="page home">
-      <h1 className="visually-hidden">Annonser i {city}</h1>
+      <div className="home-top">
+        <h1 className="home-heading">
+          <span className="home-heading-label">Annonser i</span>
+          <Link to="/profile" className="home-city">
+            <Icon name="pin" />
+            {city}
+            <span className="visually-hidden">, byt stad</span>
+          </Link>
+        </h1>
+        {token && <RequestsBell />}
+      </div>
 
       <SearchBar value={search} onChange={setSearch} />
       <CategoryFilter categories={categories} selectedId={categoryId} onSelect={setCategoryId} />
@@ -55,10 +71,7 @@ export default function Home() {
 
       {!loading && !error && items.length > 0 && (
         <>
-          <div className="list-meta muted">
-            <span>Visar {items.length} {items.length === 1 ? "annons" : "annonser"}</span>
-            <span>Senaste</span>
-          </div>
+          <h2 className="section-title">{query || categoryId ? "Sökresultat" : "Nya annonser"}</h2>
           <ItemList items={items} />
         </>
       )}

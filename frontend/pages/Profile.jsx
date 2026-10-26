@@ -1,4 +1,4 @@
-// Profil (UI.UX.md 8.1): knapp till Översikt, mina uppgifter, stad, omdömen och Logga ut.
+// Profil (Figma: Profil, gruppens stil): knapp till Översikt, mina uppgifter, stad, omdömen och Logga ut.
 // "Medlem sedan" och omdömen kommer från GET /api/users/:id. E-post och telefon kommer från inloggningen,
 // eftersom profiler i API:t aldrig innehåller kontaktuppgifter (UI.UX.md 8.4).
 // Backend kan inte spara stad än (ingen PUT för användare), så stadsbytet görs i CityContext och gäller
@@ -8,13 +8,13 @@ import { Link, useNavigate } from "react-router-dom";
 import ProfileInfo from "../components/profile/ProfileInfo.jsx";
 import CitySelect from "../components/profile/CitySelect.jsx";
 import ReviewList from "../components/reviews/ReviewList.jsx";
-import { formatRating } from "../components/reviews/formatRating.js";
+import Icon from "../components/common/Icon.jsx";
+import { formatAverage } from "../components/reviews/formatRating.js";
 import { getUser } from "../services/userService.js";
 import { useAuth } from "../hooks/useAuth.js";
 import { useCity } from "../hooks/useCity.js";
 import { useBorrowRequests } from "../hooks/useBorrowRequests.js";
 import "../assets/styles/forms.css";
-import "../assets/styles/items.css";
 import "../assets/styles/profile.css";
 
 // Antal omdömen som visas innan man trycker "Visa alla omdömen"
@@ -73,14 +73,14 @@ export default function Profile() {
       <h1 className="page-title page-header">Profil</h1>
 
       <Link to="/dashboard" className="btn btn-primary btn-block dashboard-link">
-        <span>Mina annonser &amp; förfrågningar</span>
+        <span>Mina annonser och förfrågningar</span>
         {waiting > 0 && (
           <span className="count-badge">
             {waiting}
             <span className="visually-hidden">{waiting === 1 ? " förfrågan väntar" : " förfrågningar väntar"} på ditt svar</span>
           </span>
         )}
-        <span aria-hidden="true">›</span>
+        <Icon name="chevron-right" size={22} />
       </Link>
 
       <ProfileInfo
@@ -132,7 +132,13 @@ export default function Profile() {
           <p className="muted">Inga omdömen än. De dyker upp efter ditt första avslutade lån.</p>
         ) : (
           <>
-            <p className="rating-summary">{formatRating(profile)}</p>
+            <p className="rating-summary">
+              <Icon name="star" size={28} className="star" />
+              <strong>{formatAverage(profile.average_rating)}</strong>
+              <span className="muted">
+                ({profile.review_count} {profile.review_count === 1 ? "omdöme" : "omdömen"})
+              </span>
+            </p>
             <ReviewList reviews={showAllReviews ? reviews : reviews.slice(0, LATEST_REVIEWS)} />
             {reviews.length > LATEST_REVIEWS && (
               <button type="button" className="link-button" onClick={() => setShowAllReviews(!showAllReviews)}>
