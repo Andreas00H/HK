@@ -1,8 +1,9 @@
 // Provider för inloggningen. JWT och inloggad användare sparas i localStorage så att man är kvar
 // inloggad efter omladdning. E-post och telefon finns bara här, eftersom GET /api/users/:id aldrig
 // skickar kontaktuppgifter (UI.UX.md 8.4).
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AuthContext } from "./authContext.js";
+import { setUnauthorizedHandler } from "../services/api.js";
 import * as authService from "../services/authService.js";
 
 const TOKEN_KEY = "hk_token";
@@ -53,6 +54,15 @@ function loadSession() {
 
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(loadSession);
+
+    // När backend svarar 401 på ett inloggat anrop rensas sessionen. ProtectedRoute skickar sedan användaren till /login.
+  useEffect(() => {
+    setUnauthorizedHandler(() => {
+      clearSession();
+      setSession(LOGGED_OUT);
+    });
+    return () => setUnauthorizedHandler(null);
+  }, []);
 
   // Kastar fel med backendens meddelande, t.ex. "Fel e-post eller lösenord"
   async function login({ email, password }) {
