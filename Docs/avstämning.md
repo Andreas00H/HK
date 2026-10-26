@@ -107,34 +107,46 @@ Frontend    ------ Andy  + Alex ----
 # Avstämning: Frontend
 
 **Ansvariga:** Andy + Alex
-**Datum:** 2026-10-13
-**Status:** Inte påbörjad i kod. Skalfilerna från mappstrukturen finns, men ingen React-app är uppsatt ännu.
+**Datum:** 2026-10-26
+**Status:** Klar för v1. Hela flödet är byggt, testat och mergat till `main` (PR #12–#17). Live: [hk-frontend.onrender.com](https://hk-frontend.onrender.com/)
 
 ---
 
-## 1. Läge
+## 1. Vem gjorde vad
 
-- Backend vecka 1–2 är klar och mergad till `main` (PR #2 och #3), så frontend kan nu bygga mot riktiga endpoints.
-- Designunderlaget är klart: [UI.UX.md](./UI.UX.md) och mockups i Figma (se UI/UX nedan).
-- `frontend/` saknar `package.json` och Vite-setup.
+| Del | Vem | PR / commit |
+| --- | --- | --- |
+| Setup: Vite + React + Router, CSS-variabler, meny och sidhuvud, alla 11 rutter | Andy | `1469f72` |
+| Hem: annonslista, sök, kategorifilter, stad | Andy | `898bd6a` |
+| Annonssida: detaljer, ägare, dela, låneförfrågan med beräknad hyra | Andy | `92ad481` |
+| README: kom igång lokalt + Mac-info (port 5000/AirPlay, PostgreSQL) | Andy | `f731351` |
+| Handpenning och stadsdel hela vägen (databas, migrering, backend, formulär, annonssida) + kartnål | Andy | #12 |
+| Logga in, Registrera, AuthContext, skyddade sidor | Alex | #6 |
+| Stad från profilen, /items | Alex | #7 |
+| Tillbaka från delad länk och efter inloggning | Alex | #8 |
+| Lägg upp, redigera, ta bort, Förfrågan med statusknappar | Alex | #10 |
+| Översikt, Kontakter, Profil | Alex | #11 |
+| Manuella tester vecka 1–2 | Alex | #13 |
+| Ny design enligt Figma (startunderlag) | Alex | #14 |
+| Omdömesformulär | Ernest | #15 |
+| 401 loggar ut | Ernest | #16 |
 
-## 2. Plan (förslag, bestäms med Alex)
+## 2. Granskning
 
-1. Setup: Vite + React + React Router, `frontend/.env.example` med `VITE_API_URL`, färger och typsnitt från UI.UX.md som CSS-variabler i `index.css`.
-2. Layout: `Header`, `BottomNav`, `Layout`.
-3. Konto: Logga in, Registrera, `AuthContext`, `ProtectedRoute`.
-4. Hem (lista, sök, kategorifilter) och Annonsdetaljer med låneförfrågan.
-5. Lägg upp / redigera annons.
-6. Kontakter, Profil, Översikt (dashboard) och Förfrågan med statusknappar.
-7. Omdömen, laddning, tomma listor och felmeddelanden.
-8. Driftsättning på Render tillsammans med backend.
+Andy har granskat och mergat alla frontend-PR:er. Exempel på vad granskningen fångade:
 
-Förslag på uppdelning: **Andy** steg 1, 2, 4 och 5. **Alex** steg 3, 6 och 7. Vi jobbar på egna branches med små PR:er mot `main` för att undvika krockar.
+- **PR #14** hade konflikter mot `main` och tog bort stadsdel. Före merge rättades: handpenning och stadsdel, "Ledig" på korten, kartnål vid staden, Ernests omdömesformulär och kontrast (WCAG AA). Alex förbättrade även Andys förslag på ramfärg (`#9CA3AF` gav 2,5:1, `#868C97` ger minst 3:1).
+- Varje PR testades lokalt mot backend och PostgreSQL med `npm run lint` och `npm run build` före merge.
 
-## 3. Risker
+## 3. Test (2026-10-26)
 
-- Frontend är den del som ligger mest efter inför vecka 44.
-- Setup (steg 1) måste vara klar och mergad innan vi kan jobba parallellt.
+Hela flödet testat lokalt på `main` med två konton:
+lägg upp med handpenning och stadsdel → förfrågan → godkänn → kontakter för båda → utlämnad → återlämnad → avslutad → omdömen från båda → omdöme på profilen. **Allt fungerar.**
+
+## 4. Kvar
+
+- Live-frontend visar en äldre version. Ernest gör en ny deploy på Render från `main`, sedan testas samma flöde live.
+- Stad sparas bara i webbläsaren (backend har ingen PUT för användare). Dokumenterat, inte en del av v1.
 
 ---
 
@@ -145,32 +157,25 @@ UI/UX----- Andy  + Chippe -----
 
 ### Andy
 
-**Datum:** 2026-10-13
-**Status:** Designunderlag v1 klart.
+**Datum:** 2026-10-26
+**Status:** Klar. [UI.UX.md](./UI.UX.md) v2.0 beskriver appen som den är byggd.
 
 #### Gjort
 
-- **`Docs/UI.UX.md`** (2026-09-30): bottennavigation (Hem, Lägg upp, Kontakter, Profil), kort beskrivning av alla skärmar, stilguide (färger som CSS-variabler, typsnitt, avstånd, knappar, kort, statusbadges) och tillgänglighetskrav. Textfärgerna är kontrollerade mot WCAG AA-kontrast.
-- **`Docs/Brainstorm.pdf`** (2026-09-30): den ursprungliga idébrainstormen som projektplanen bygger på.
-- **Mockups i Figma** (2026-09-30) för fem skärmar: Hem, Annonsdetaljer, Lägg upp, Kontakter och Profil. [HK – Mockups](https://www.figma.com/design/7Ks6k91BOnLcywdfrUiZPU/HK--Mockups)
-- Mergat backend-PR #2 och #3.
+- **Brainstorm** (`Docs/Brainstorm.pdf`): idén som projektplanen bygger på.
+- **UI.UX.md v1** (2026-09-30): navigation, skärmar, stilguide och tillgänglighet.
+- **Mockups i Figma** (2026-09-30): Hem, Annons, Lägg upp, Kontakter, Profil. [HK – Mockups](https://www.figma.com/design/7Ks6k91BOnLcywdfrUiZPU/HK--Mockups)
+- **UI.UX.md v1.1** (2026-10-13): beslut i gruppen (handpenning, stadsdel, badges, gäster) och Figma-länk.
+- **Handpenning och stadsdel** (PR #12, 2026-10-22): från designbeslut till fungerande funktion i databas, backend och frontend.
+- **Kartnål i stället för ▾** (2026-10-22): hittat vid test, pilen fick stadsknappen att se ut som en rullista.
+- **Granskning av ny design** (PR #14, 2026-10-24): fem krav före merge, bl.a. WCAG-kontrast och att gruppens beslut behölls.
+- **UI.UX.md v2.0** (2026-10-26): uppdaterad efter den nya designen, med versionshistorik, nya beslut och kontrastvärden.
 
 #### Designbeslut
 
-- Blå grundfärg (`#1D4ED8`) för tillit, kompakt Blocket-liknande layout, annonskort två per rad och dygnspriset alltid synligt.
-- Allt som visas i mockupsen ska finnas i databasen eller gå att räkna ut. Därför togs AI-förslag som BankID, "svarar inom 1 timme" och favoriter bort.
-- "Beräknad hyra" (dygnspris × antal dagar) på annonssidan räknas i frontend och kräver inget av backend.
-- Etiketten "Ledig" på annonskorten visar fältet `available`.
-
-#### Öppet
-
-- **Handpenning och stadsdel** finns i mockupsen men inte i databasen. Beslut behövs: två frivilliga fält i `items`, eller tas bort ur designen för v1.
-- Uppdatera UI.UX.md efter mockupsen (badge-stil, "Ledig", beslut i stället för öppna frågor).
-- Små justeringar i Figma (typsnitt på Kontakter, svenskt datumformat på annonssidan).
-
-#### Nästa
-
-- Bygga frontend enligt designen tillsammans med Alex.
+- Blå grundfärg (`#1D4ED8`) för tillit och dygnspriset alltid synligt.
+- Allt som visas måste finnas i databasen eller räknas fram. Därför togs BankID, "svarar inom 1 timme" och favoriter bort.
+- Kontrast enligt WCAG AA för all text och 3:1 för fältramar.
 
 ### Chippe
 
