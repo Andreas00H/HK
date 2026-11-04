@@ -9,10 +9,10 @@ Checklista för frontend **utan UI-design** — layout, färger och visuellt uts
 ## Vecka 1 — App, auth, annonslista
 
 ### Setup
-- [ ] `frontend/package.json` — React, React Router, Vite (eller enligt teambeslut); dev-script
-- [ ] `main.jsx` / `App.jsx` — router, grundlayout (platshållare tills UX levererar styling)
-- [ ] `frontend/.env.example` — t.ex. `VITE_API_URL=http://localhost:5000` (ingen hemlighet i repo)
-- [ ] `services/api.js` — `fetch`, bas-URL, `Authorization: Bearer`, JSON-fel
+- [x] `frontend/package.json` — React, React Router, Vite (eller enligt teambeslut); dev-script
+- [x] `main.jsx` / `App.jsx` — router, grundlayout (platshållare tills UX levererar styling)
+- [x] `frontend/.env.example` — t.ex. `VITE_API_URL=http://localhost:5000` (ingen hemlighet i repo)
+- [x] `services/api.js` — `fetch`, bas-URL, `Authorization: Bearer`, JSON-fel
 
 ### Auth
 - [x] `AuthContext` + `useAuth` — login/logout, spara JWT (t.ex. localStorage), inloggad användare
@@ -67,19 +67,19 @@ Checklista för frontend **utan UI-design** — layout, färger och visuellt uts
 ## Vecka 3 — Omdömen, robusthet, drift
 
 ### Omdömen
-- [ ] `ReviewForm` / `ReviewList` — efter `COMPLETED`; `POST /api/reviews`, `GET /api/reviews/user/:id`
-- [ ] Visa omdömen på profil (ägare kan bedöma lånare före godkännande)
+- [x] `ReviewForm` / `ReviewList` — efter `COMPLETED`; `POST /api/reviews`, `GET /api/reviews/user/:id`
+- [x] Visa omdömen på profil (ägare kan bedöma lånare före godkännande)
 
 ### Kvalitet
-- [ ] Laddningstillstånd och felmeddelanden på alla API-anrop
-- [ ] Tomma listor (inga annonser / inga förfrågningar) — enkel text, ingen designpass
-- [ ] 401 → login; ogiltig JWT → rensa token
-- [ ] CSS: endast koppla in UX-filer eller minimal struktur (grid/flex för flöde), **ingen visuell design**
+- [x] Laddningstillstånd och felmeddelanden på alla API-anrop
+- [x] Tomma listor (inga annonser / inga förfrågningar) — enkel text, ingen designpass
+- [x] 401 → login; ogiltig JWT → rensa token
+- [x] CSS: endast koppla in UX-filer eller minimal struktur (grid/flex för flöde), **ingen visuell design**
 
 ### Integration & deploy
-- [ ] Byt `VITE_API_URL` mot lokal backend, sedan Render-backend
-- [ ] Genomkör happy path tillsammans med backend (samma scenario som Postman)
-- [ ] Build (`npm run build`); statisk hosting enligt team (t.ex. Render)
+- [x] Byt `VITE_API_URL` mot lokal backend, sedan Render-backend
+- [x] Genomkör happy path tillsammans med backend (samma scenario som Postman)
+- [x] Build (`npm run build`); statisk hosting enligt team (t.ex. Render)
 
 ---
 
